@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::API
-  include ActionController::MimeResponds
-
   def render_json_error(message, status = :unprocessable_entity)
     render json: { error: message }, status: status
   end
