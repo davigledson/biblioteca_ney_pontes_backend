@@ -11,8 +11,8 @@ class User < ApplicationRecord
     user.jti != payload["jti"]
   end
 
-  def regenerate_jti
-    update(jti: SecureRandom.uuid)
+  def self.revoke_jwt(payload, user)
+    user.update!(jti: SecureRandom.uuid)
   end
 
   def jwt_payload

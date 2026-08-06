@@ -10,7 +10,7 @@ Rails.application.routes.draw do
         passwords: "api/v1/users/passwords"
       }
 
-      devise_scope :user do
+      devise_scope :"api_v1_user" do
         post   "/login",          to: "users/sessions#create"
         delete "/logout",         to: "users/sessions#destroy"
         post   "/users/password", to: "users/passwords#create"

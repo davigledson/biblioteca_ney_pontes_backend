@@ -2,8 +2,6 @@ module Api
   module V1
     module Users
       class PasswordsController < Devise::PasswordsController
-        skip_before_action :assert_is_devise_resource!, raise: false
-
         respond_to :json
 
         def create
