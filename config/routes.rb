@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
       resources :users, only: [:index, :show, :create, :update, :destroy]
       put "/users/:id/change_password", to: "users#change_password"
+      resources :categorias
     end
   end
 end
