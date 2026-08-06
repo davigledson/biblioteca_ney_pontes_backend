@@ -11,6 +11,162 @@ components:
       scheme: bearer
       bearerFormat: JWT
 paths:
+  "/api/v1/categorias":
+    get:
+      summary: Listar categorias
+      tags:
+      - Categorias
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de categorias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nome:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    post:
+      summary: Cadastrar categoria
+      tags:
+      - Categorias
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: Categoria cadastrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+        '422':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Ficção
+              required:
+              - nome
+  "/api/v1/categorias/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Detalhes da categoria
+      tags:
+      - Categorias
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Categoria encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: Categoria não encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      summary: Atualizar categoria
+      tags:
+      - Categorias
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Categoria atualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Ficção Científica
+              required:
+              - nome
+    delete:
+      summary: Remover categoria
+      tags:
+      - Categorias
+      security:
+      - bearerAuth: []
+      responses:
+        '204':
+          description: Categoria removida
   "/api/v1/login":
     post:
       summary: Autenticar bibliotecário

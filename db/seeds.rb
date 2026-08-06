@@ -1,11 +1,15 @@
-# Admin padrão do sistema
-admin = User.find_or_initialize_by(email: "admin@biblioteca.com")
-admin.assign_attributes(
-  nome: "Administrador",
-  password: "admin123",
-  password_confirmation: "admin123",
-  first_login: true
-)
-admin.save!
+unless User.exists?(email: "admin@biblioteca.com")
+  User.create!(
+    nome: "Administrador",
+    email: "admin@biblioteca.com",
+    password: "admin123",
+    password_confirmation: "admin123",
+    first_login: true
+  )
+end
 
-puts "Usuário admin criado: admin@biblioteca.com / admin123"
+["Ficcao", "Nao Ficcao", "Infantil", "Historia", "Ciencia", "Biografia"].each do |nome|
+  Categoria.find_or_create_by!(nome: nome)
+end
+
+puts "Seeds carregados!"
