@@ -7,6 +7,10 @@ class User < ApplicationRecord
 
   before_validation :set_jti, on: :create
 
+  def self.jwt_revoked?(payload, user)
+    user.jti != payload["jti"]
+  end
+
   def regenerate_jti
     update(jti: SecureRandom.uuid)
   end

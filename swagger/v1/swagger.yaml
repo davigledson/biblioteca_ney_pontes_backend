@@ -1,0 +1,347 @@
+---
+openapi: 3.0.1
+info:
+  title: Biblioteca Municipal Ney Pontes - API
+  version: v1
+  description: API para o sistema da Biblioteca Municipal Ney Pontes
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  "/api/v1/login":
+    post:
+      summary: Autenticar bibliotecário
+      tags:
+      - Autenticação
+      parameters: []
+      responses:
+        '200':
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      nome:
+                        type: string
+                      email:
+                        type: string
+                      first_login:
+                        type: boolean
+                  token:
+                    type: string
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: admin@biblioteca.com
+                password:
+                  type: string
+                  example: senha123
+              required:
+              - email
+              - password
+  "/api/v1/logout":
+    delete:
+      summary: Encerrar sessão
+      tags:
+      - Autenticação
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Logout realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  "/api/v1/users/password":
+    post:
+      summary: Solicitar recuperação de senha
+      tags:
+      - Autenticação
+      parameters: []
+      responses:
+        '200':
+          description: Instruções enviadas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '422':
+          description: E-mail não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required:
+              - email
+  "/api/v1/users":
+    get:
+      summary: Listar bibliotecários
+      tags:
+      - Bibliotecários
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de bibliotecários
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nome:
+                      type: string
+                    email:
+                      type: string
+                    first_login:
+                      type: boolean
+                    created_at:
+                      type: string
+                      format: date-time
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    post:
+      summary: Cadastrar bibliotecário
+      tags:
+      - Bibliotecários
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: Bibliotecário cadastrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      nome:
+                        type: string
+                      email:
+                        type: string
+                      first_login:
+                        type: boolean
+                  temporary_password:
+                    type: string
+        '422':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Novo Bibliotecário
+                email:
+                  type: string
+                  example: novo@biblioteca.com
+              required:
+              - nome
+              - email
+  "/api/v1/users/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Detalhes do bibliotecário
+      tags:
+      - Bibliotecários
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Detalhes encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome:
+                    type: string
+                  email:
+                    type: string
+                  first_login:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: Não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      summary: Atualizar bibliotecário
+      tags:
+      - Bibliotecários
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Bibliotecário atualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      nome:
+                        type: string
+                      email:
+                        type: string
+                      first_login:
+                        type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                email:
+                  type: string
+    delete:
+      summary: Remover bibliotecário
+      tags:
+      - Bibliotecários
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Bibliotecário removido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  "/api/v1/users/{id}/change_password":
+    put:
+      summary: Alterar senha
+      tags:
+      - Bibliotecários
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Senha alterada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: nova_senha_segura
+                password_confirmation:
+                  type: string
+                  example: nova_senha_segura
+              required:
+              - password
+              - password_confirmation
+servers:
+- url: http://localhost:3001
+  description: Servidor de desenvolvimento
