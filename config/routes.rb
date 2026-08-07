@@ -27,6 +27,17 @@ Rails.application.routes.draw do
       resources :categorias
       resources :livros
       resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas"
+
+      resources :emprestimos, only: [:index, :show, :create] do
+        member do
+          put :devolver
+          put :renovar
+        end
+        collection do
+          get :atrasados
+          get :historico
+        end
+      end
     end
   end
 end
