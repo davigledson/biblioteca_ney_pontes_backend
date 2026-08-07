@@ -40,4 +40,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get "/api/v1/users/password/edit", to: "api/v1/users/passwords#edit", as: :edit_api_v1_user_password
 end

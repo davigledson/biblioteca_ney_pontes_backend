@@ -9,7 +9,7 @@ class Emprestimo < ApplicationRecord
   validates :data_devolucao_prevista, presence: true
   validate :livro_disponivel, on: :create
 
-  before_create :calcular_devolucao_prevista
+  before_validation :calcular_devolucao_prevista, on: :create
 
   scope :ativos, -> { where(status: :ativo) }
   scope :atrasados, -> { where(status: :atrasado) }
@@ -24,7 +24,7 @@ class Emprestimo < ApplicationRecord
   def renovar!
     transaction do
       increment!(:renovacoes)
-      nova_data = data_devolucao_prevista + 15.business_days
+      nova_data = 15.business_days.from_now.to_date
       update!(data_devolucao_prevista: nova_data, status: :ativo)
     end
   end

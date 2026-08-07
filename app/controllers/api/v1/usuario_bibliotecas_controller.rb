@@ -4,6 +4,7 @@ module Api
       before_action :set_usuario, only: [:show, :update, :destroy]
 
       def index
+        authorize UsuarioBiblioteca
         usuarios = policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc)
         render json: usuarios.map { |u| usuario_json(u) }
       end
