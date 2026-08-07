@@ -36,7 +36,7 @@ RSpec.describe 'API V1 Users', type: :request do
             token: { type: :string }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:credentials) { { email: user.email, password: 'senha123' } }
 
         run_test!
@@ -67,7 +67,7 @@ RSpec.describe 'API V1 Users', type: :request do
             message: { type: :string }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
 
         run_test!
@@ -95,7 +95,7 @@ RSpec.describe 'API V1 Users', type: :request do
             message: { type: :string }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:payload) { { email: user.email } }
 
         run_test!
@@ -133,7 +133,7 @@ RSpec.describe 'API V1 Users', type: :request do
             }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
 
         run_test!
@@ -182,7 +182,7 @@ RSpec.describe 'API V1 Users', type: :request do
             temporary_password: { type: :string }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:payload) { { nome: 'Novo Biblio', email: 'novo@biblioteca.com' } }
 
@@ -198,7 +198,7 @@ RSpec.describe 'API V1 Users', type: :request do
             }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:payload) { { nome: '', email: '' } }
 
@@ -225,7 +225,7 @@ RSpec.describe 'API V1 Users', type: :request do
             created_at: { type: :string, format: 'date-time' }
           }
 
-        let!(:admin) { create_user }
+        let!(:admin) { create_bibliotecario }
         let(:Authorization) { auth_headers(admin)["Authorization"] }
         let(:id) { admin.id }
 
@@ -238,7 +238,7 @@ RSpec.describe 'API V1 Users', type: :request do
             error: { type: :string }
           }
 
-        let!(:admin) { create_user }
+        let!(:admin) { create_bibliotecario }
         let(:Authorization) { auth_headers(admin)["Authorization"] }
         let(:id) { 9999 }
 
@@ -275,7 +275,7 @@ RSpec.describe 'API V1 Users', type: :request do
             }
           }
 
-        let!(:admin) { create_user }
+        let!(:admin) { create_bibliotecario }
         let(:Authorization) { auth_headers(admin)["Authorization"] }
         let(:id) { admin.id }
         let(:payload) { { nome: 'Nome Atualizado' } }
@@ -295,8 +295,8 @@ RSpec.describe 'API V1 Users', type: :request do
             message: { type: :string }
           }
 
-        let!(:admin) { create_user }
-        let(:target) { User.create!(nome: 'Remover', email: 'remover@teste.com', password: '123456', password_confirmation: '123456') }
+        let!(:admin) { create_bibliotecario }
+        let(:target) { User.create!(nome: 'Remover', email: 'remover@teste.com', password: '123456', password_confirmation: '123456', role: :bibliotecario) }
         let(:Authorization) { auth_headers(admin)["Authorization"] }
         let(:id) { target.id }
 
@@ -328,7 +328,7 @@ RSpec.describe 'API V1 Users', type: :request do
             message: { type: :string }
           }
 
-        let!(:admin) { create_user }
+        let!(:admin) { create_bibliotecario }
         let(:Authorization) { auth_headers(admin)["Authorization"] }
         let(:id) { admin.id }
         let(:payload) { { password: 'nova_senha', password_confirmation: 'nova_senha' } }

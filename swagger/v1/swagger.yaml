@@ -167,6 +167,350 @@ paths:
       responses:
         '204':
           description: Categoria removida
+  "/api/v1/cidadaos":
+    get:
+      summary: Listar cidadaos
+      tags:
+      - Cidadaos
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de cidadaos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nome_completo:
+                      type: string
+                    cpf:
+                      type: string
+                    telefone:
+                      type: string
+                    email:
+                      type: string
+                    senha_emprestimo:
+                      type: string
+                    created_at:
+                      type: string
+                      format: date-time
+        '403':
+          description: Acesso negado (cidadao)
+    post:
+      summary: Cadastrar cidadao (admin)
+      tags:
+      - Cidadaos
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: Cidadao cadastrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome_completo:
+                    type: string
+                  cpf:
+                    type: string
+                  telefone:
+                    type: string
+                  email:
+                    type: string
+                  senha_emprestimo:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome_completo:
+                  type: string
+                  example: Joao Silva
+                email:
+                  type: string
+                  example: joao@email.com
+                cpf:
+                  type: string
+                  example: 111.222.333-44
+                telefone:
+                  type: string
+                  example: '84988888888'
+                senha_emprestimo:
+                  type: string
+                  example: abc123
+              required:
+              - nome_completo
+              - email
+              - cpf
+              - telefone
+              - senha_emprestimo
+  "/api/v1/cidadaos/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Detalhes do cidadao
+      tags:
+      - Cidadaos
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Cidadao ve o proprio perfil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome_completo:
+                    type: string
+                  cpf:
+                    type: string
+                  telefone:
+                    type: string
+                  email:
+                    type: string
+                  senha_emprestimo:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+    put:
+      summary: Atualizar cidadao
+      tags:
+      - Cidadaos
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Cidadao atualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome_completo:
+                    type: string
+                  cpf:
+                    type: string
+                  telefone:
+                    type: string
+                  email:
+                    type: string
+                  senha_emprestimo:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome_completo:
+                  type: string
+                telefone:
+                  type: string
+                senha_emprestimo:
+                  type: string
+    delete:
+      summary: Remover cidadao
+      tags:
+      - Cidadaos
+      security:
+      - bearerAuth: []
+      responses:
+        '204':
+          description: Cidadao removido
+  "/api/v1/registro":
+    post:
+      summary: Cadastro publico de cidadao
+      tags:
+      - Registro
+      parameters: []
+      responses:
+        '201':
+          description: Cadastro realizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      nome:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                  usuario_biblioteca:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      nome_completo:
+                        type: string
+                      cpf:
+                        type: string
+                      telefone:
+                        type: string
+                      senha_emprestimo:
+                        type: string
+                  token:
+                    type: string
+        '422':
+          description: Dados invalidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Joao
+                email:
+                  type: string
+                  example: joao@email.com
+                password:
+                  type: string
+                  example: senha123
+                password_confirmation:
+                  type: string
+                  example: senha123
+                nome_completo:
+                  type: string
+                  example: Joao da Silva
+                cpf:
+                  type: string
+                  example: 111.222.333-44
+                telefone:
+                  type: string
+                  example: '84988888888'
+                senha_emprestimo:
+                  type: string
+                  example: abc123
+              required:
+              - nome
+              - email
+              - password
+              - password_confirmation
+              - nome_completo
+              - cpf
+              - telefone
+              - senha_emprestimo
+  "/api/v1/perfil":
+    get:
+      summary: Ver perfil do cidadao logado
+      tags:
+      - Perfil
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Perfil encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome_completo:
+                    type: string
+                  cpf:
+                    type: string
+                  telefone:
+                    type: string
+                  email:
+                    type: string
+                  senha_emprestimo:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: Bibliotecario nao tem perfil
+    put:
+      summary: Atualizar perfil do cidadao logado
+      tags:
+      - Perfil
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Perfil atualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  nome_completo:
+                    type: string
+                  cpf:
+                    type: string
+                  telefone:
+                    type: string
+                  email:
+                    type: string
+                  senha_emprestimo:
+                    type: string
+                  created_at:
+                    type: string
+                    format: date-time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome_completo:
+                  type: string
+                telefone:
+                  type: string
+                senha_emprestimo:
+                  type: string
   "/api/v1/livros":
     get:
       summary: Listar livros

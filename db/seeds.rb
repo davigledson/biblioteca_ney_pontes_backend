@@ -4,6 +4,7 @@ unless User.exists?(email: "admin@biblioteca.com")
     email: "admin@biblioteca.com",
     password: "admin123",
     password_confirmation: "admin123",
+    role: :bibliotecario,
     first_login: true
   )
 end

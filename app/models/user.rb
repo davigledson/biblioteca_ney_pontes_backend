@@ -3,9 +3,13 @@ class User < ApplicationRecord
          :validatable, :jwt_authenticatable,
          jwt_revocation_strategy: self
 
+  enum :role, { bibliotecario: 0, cidadao: 1 }
+
   validates :nome, presence: true
 
   before_validation :set_jti, on: :create
+
+  has_one :usuario_biblioteca, dependent: :destroy
 
   def self.jwt_revoked?(payload, user)
     user.jti != payload["jti"]
@@ -16,7 +20,7 @@ class User < ApplicationRecord
   end
 
   def jwt_payload
-    { "jti" => jti, "nome" => nome }
+    { "jti" => jti, "nome" => nome, "role" => role }
   end
 
   private

@@ -4,25 +4,29 @@ module Api
       before_action :set_user, only: [:show, :update, :destroy, :change_password]
 
       def index
-        users = User.all.order(created_at: :desc)
-        render json: users.as_json(only: [:id, :nome, :email, :first_login, :created_at])
+        authorize User
+        users = User.bibliotecario.order(created_at: :desc)
+        render json: users.as_json(only: [:id, :nome, :email, :role, :first_login, :created_at])
       end
 
       def show
-        render json: @user.as_json(only: [:id, :nome, :email, :first_login, :created_at])
+        authorize @user
+        render json: @user.as_json(only: [:id, :nome, :email, :role, :first_login, :created_at])
       end
 
       def create
+        authorize User
         temp_password = SecureRandom.hex(8)
-        user = User.new(user_params.merge(password: temp_password, password_confirmation: temp_password))
+        user = User.new(user_params.merge(password: temp_password, password_confirmation: temp_password, role: :bibliotecario))
 
         if user.save
           render json: {
-            message: "Bibliotecário cadastrado com sucesso",
+            message: "Bibliotecario cadastrado com sucesso",
             user: {
               id: user.id,
               nome: user.nome,
               email: user.email,
+              role: user.role,
               first_login: user.first_login
             },
             temporary_password: temp_password
@@ -33,10 +37,11 @@ module Api
       end
 
       def update
+        authorize @user
         if @user.update(user_update_params)
           render json: {
-            message: "Bibliotecário atualizado com sucesso",
-            user: { id: @user.id, nome: @user.nome, email: @user.email, first_login: @user.first_login }
+            message: "Bibliotecario atualizado com sucesso",
+            user: { id: @user.id, nome: @user.nome, email: @user.email, role: @user.role, first_login: @user.first_login }
           }
         else
           render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
@@ -44,11 +49,13 @@ module Api
       end
 
       def destroy
+        authorize @user
         @user.destroy
-        render json: { message: "Bibliotecário removido com sucesso" }, status: :ok
+        render json: { message: "Bibliotecario removido com sucesso" }, status: :ok
       end
 
       def change_password
+        authorize @user, :change_password?
         if @user.update(password_params.merge(first_login: false))
           render json: { message: "Senha alterada com sucesso" }
         else
@@ -60,7 +67,7 @@ module Api
 
       def set_user
         @user = User.find_by(id: params[:id])
-        render json: { error: "Bibliotecário não encontrado" }, status: :not_found unless @user
+        render json: { error: "Bibliotecario nao encontrado" }, status: :not_found unless @user
       end
 
       def user_params
