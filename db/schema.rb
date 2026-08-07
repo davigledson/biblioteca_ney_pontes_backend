@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_07_021336) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_07_030056) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,6 +19,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_07_021336) do
     t.string "nome", null: false
     t.datetime "updated_at", null: false
     t.index ["nome"], name: "index_categorias_on_nome", unique: true
+  end
+
+  create_table "emprestimos", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "data_devolucao_prevista", null: false
+    t.date "data_devolucao_real"
+    t.datetime "data_emprestimo", null: false
+    t.bigint "livro_id", null: false
+    t.integer "renovacoes", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "usuario_biblioteca_id", null: false
+    t.index ["livro_id"], name: "index_emprestimos_on_livro_id"
+    t.index ["usuario_biblioteca_id"], name: "index_emprestimos_on_usuario_biblioteca_id"
   end
 
   create_table "livros", force: :cascade do |t|
@@ -30,6 +44,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_07_021336) do
     t.string "titulo", null: false
     t.datetime "updated_at", null: false
     t.index ["categoria_id"], name: "index_livros_on_categoria_id"
+  end
+
+  create_table "multas", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "emprestimo_id", null: false
+    t.boolean "pago", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.decimal "valor", precision: 8, scale: 2, null: false
+    t.index ["emprestimo_id"], name: "index_multas_on_emprestimo_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -61,6 +84,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_07_021336) do
     t.index ["user_id"], name: "index_usuario_bibliotecas_on_user_id", unique: true
   end
 
+  add_foreign_key "emprestimos", "livros"
+  add_foreign_key "emprestimos", "usuario_bibliotecas"
   add_foreign_key "livros", "categorias"
+  add_foreign_key "multas", "emprestimos"
   add_foreign_key "usuario_bibliotecas", "users"
 end

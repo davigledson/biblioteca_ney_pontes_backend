@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
   get "up" => "rails/health#show", as: :rails_health_check
 
   namespace :api do
@@ -17,9 +17,9 @@ Rails.application.routes.draw do
         put    "/users/password", to: "users/passwords#update"
       end
 
-      post   "/registro", to: "registros#create"
+      post "/registro", to: "registros#create"
 
-      resource  :perfil, only: [:show, :update], controller: "perfis"
+      resource :perfil, only: [:show, :update], controller: "perfis"
 
       resources :users, only: [:index, :show, :create, :update, :destroy]
       put "/users/:id/change_password", to: "users#change_password"
@@ -27,6 +27,19 @@ Rails.application.routes.draw do
       resources :categorias
       resources :livros
       resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas"
+
+      resources :emprestimos, only: [:index, :show, :create] do
+        member do
+          put :devolver
+          put :renovar
+        end
+        collection do
+          get :atrasados
+          get :historico
+        end
+      end
     end
   end
+
+  get "/api/v1/users/password/edit", to: "api/v1/users/passwords#edit", as: :edit_api_v1_user_password
 end

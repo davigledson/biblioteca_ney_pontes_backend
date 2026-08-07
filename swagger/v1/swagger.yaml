@@ -511,6 +511,265 @@ paths:
                   type: string
                 senha_emprestimo:
                   type: string
+  "/api/v1/emprestimos":
+    get:
+      summary: Listar emprestimos
+      tags:
+      - Emprestimos
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de emprestimos (bibliotecario)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    status:
+                      type: string
+                    data_emprestimo:
+                      type: string
+                      format: date-time
+                    data_devolucao_prevista:
+                      type: string
+                      format: date
+                    data_devolucao_real:
+                      type: string
+                      format: date
+                      nullable: true
+                    renovacoes:
+                      type: integer
+                    livro:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        titulo:
+                          type: string
+                        autor:
+                          type: string
+                    usuario_biblioteca:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        nome_completo:
+                          type: string
+                        cpf:
+                          type: string
+                    multa:
+                      type: object
+                      nullable: true
+                    created_at:
+                      type: string
+                      format: date-time
+    post:
+      summary: Realizar emprestimo
+      tags:
+      - Emprestimos
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: Emprestimo realizado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  status:
+                    type: string
+                  data_emprestimo:
+                    type: string
+                    format: date-time
+                  data_devolucao_prevista:
+                    type: string
+                    format: date
+                  data_devolucao_real:
+                    type: string
+                    format: date
+                    nullable: true
+                  renovacoes:
+                    type: integer
+                  livro:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      titulo:
+                        type: string
+                      autor:
+                        type: string
+                  usuario_biblioteca:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      nome_completo:
+                        type: string
+                      cpf:
+                        type: string
+                  multa:
+                    type: object
+                    nullable: true
+                  created_at:
+                    type: string
+                    format: date-time
+        '401':
+          description: Senha invalida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                livro_id:
+                  type: integer
+                  example: 1
+                usuario_biblioteca_id:
+                  type: integer
+                  example: 1
+                senha_emprestimo:
+                  type: string
+                  example: abc123
+              required:
+              - livro_id
+              - usuario_biblioteca_id
+              - senha_emprestimo
+  "/api/v1/emprestimos/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Detalhes do emprestimo
+      tags:
+      - Emprestimos
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Emprestimo encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  status:
+                    type: string
+                  data_emprestimo:
+                    type: string
+                    format: date-time
+                  data_devolucao_prevista:
+                    type: string
+                    format: date
+                  data_devolucao_real:
+                    type: string
+                    format: date
+                    nullable: true
+                  renovacoes:
+                    type: integer
+                  livro:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      titulo:
+                        type: string
+                      autor:
+                        type: string
+                  usuario_biblioteca:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      nome_completo:
+                        type: string
+                      cpf:
+                        type: string
+                  multa:
+                    type: object
+                    nullable: true
+                  created_at:
+                    type: string
+                    format: date-time
+  "/api/v1/emprestimos/{id}/devolver":
+    put:
+      summary: Registrar devolucao
+      tags:
+      - Emprestimos
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Devolucao registrada
+  "/api/v1/emprestimos/{id}/renovar":
+    put:
+      summary: Renovar emprestimo
+      tags:
+      - Emprestimos
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Emprestimo renovado
+  "/api/v1/emprestimos/atrasados":
+    get:
+      summary: Relatorio de livros em atraso
+      tags:
+      - Emprestimos
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de atrasados
+  "/api/v1/emprestimos/historico":
+    get:
+      summary: Historico de emprestimos por usuario
+      tags:
+      - Emprestimos
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: usuario_biblioteca_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Historico encontrado
   "/api/v1/livros":
     get:
       summary: Listar livros
