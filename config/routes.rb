@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
   get "up" => "rails/health#show", as: :rails_health_check
 
   namespace :api do
@@ -17,9 +17,9 @@ Rails.application.routes.draw do
         put    "/users/password", to: "users/passwords#update"
       end
 
-      post   "/registro", to: "registros#create"
+      post "/registro", to: "registros#create"
 
-      resource  :perfil, only: [:show, :update], controller: "perfis"
+      resource :perfil, only: [:show, :update], controller: "perfis"
 
       resources :users, only: [:index, :show, :create, :update, :destroy]
       put "/users/:id/change_password", to: "users#change_password"
