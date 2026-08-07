@@ -33,7 +33,7 @@ RSpec.describe 'API V1 Livros', type: :request do
             }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let!(:categoria) { Categoria.create!(nome: 'Ficcao') }
         let!(:livro) { Livro.create!(titulo: 'Teste', autor: 'Autor', categoria: categoria) }
         let(:Authorization) { auth_headers(user)["Authorization"] }
@@ -79,7 +79,7 @@ RSpec.describe 'API V1 Livros', type: :request do
             updated_at: { type: :string, format: 'date-time' }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let!(:categoria) { Categoria.create!(nome: 'Ficcao') }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:payload) { { titulo: 'Dom Casmurro', autor: 'Machado de Assis', categoria_id: categoria.id } }
@@ -96,7 +96,7 @@ RSpec.describe 'API V1 Livros', type: :request do
             }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:payload) { { titulo: '', autor: '', categoria_id: nil } }
 
@@ -132,7 +132,7 @@ RSpec.describe 'API V1 Livros', type: :request do
             updated_at: { type: :string, format: 'date-time' }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let!(:categoria) { Categoria.create!(nome: 'Ficcao') }
         let!(:livro) { Livro.create!(titulo: 'Teste', autor: 'Autor', categoria: categoria) }
         let(:Authorization) { auth_headers(user)["Authorization"] }
@@ -147,7 +147,7 @@ RSpec.describe 'API V1 Livros', type: :request do
             error: { type: :string }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:id) { 9999 }
 
@@ -191,7 +191,7 @@ RSpec.describe 'API V1 Livros', type: :request do
             updated_at: { type: :string, format: 'date-time' }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let!(:categoria) { Categoria.create!(nome: 'Ficcao') }
         let!(:livro) { Livro.create!(titulo: 'Antigo', autor: 'Autor', categoria: categoria) }
         let(:Authorization) { auth_headers(user)["Authorization"] }
@@ -208,7 +208,7 @@ RSpec.describe 'API V1 Livros', type: :request do
       security [{ bearerAuth: [] }]
 
       response 204, 'Livro removido' do
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let!(:categoria) { Categoria.create!(nome: 'Remover') }
         let!(:livro) { Livro.create!(titulo: 'Remover', autor: 'Autor', categoria: categoria) }
         let(:Authorization) { auth_headers(user)["Authorization"] }

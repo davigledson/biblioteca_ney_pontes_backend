@@ -17,10 +17,16 @@ Rails.application.routes.draw do
         put    "/users/password", to: "users/passwords#update"
       end
 
+      post   "/registro", to: "registros#create"
+
+      resource  :perfil, only: [:show, :update], controller: "perfis"
+
       resources :users, only: [:index, :show, :create, :update, :destroy]
       put "/users/:id/change_password", to: "users#change_password"
+
       resources :categorias
       resources :livros
+      resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas"
     end
   end
 end

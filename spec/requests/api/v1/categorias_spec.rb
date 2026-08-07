@@ -22,7 +22,7 @@ RSpec.describe 'API V1 Categorias', type: :request do
             }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
 
         run_test!
@@ -62,7 +62,7 @@ RSpec.describe 'API V1 Categorias', type: :request do
             created_at: { type: :string, format: 'date-time' }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:payload) { { nome: 'Ficção' } }
 
@@ -78,7 +78,7 @@ RSpec.describe 'API V1 Categorias', type: :request do
             }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:payload) { { nome: '' } }
 
@@ -103,7 +103,7 @@ RSpec.describe 'API V1 Categorias', type: :request do
             created_at: { type: :string, format: 'date-time' }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let!(:categoria) { Categoria.create!(nome: 'Ficção') }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:id) { categoria.id }
@@ -117,7 +117,7 @@ RSpec.describe 'API V1 Categorias', type: :request do
             error: { type: :string }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:id) { 9999 }
 
@@ -147,7 +147,7 @@ RSpec.describe 'API V1 Categorias', type: :request do
             created_at: { type: :string, format: 'date-time' }
           }
 
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let!(:categoria) { Categoria.create!(nome: 'Ficção') }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:id) { categoria.id }
@@ -163,7 +163,7 @@ RSpec.describe 'API V1 Categorias', type: :request do
       security [{ bearerAuth: [] }]
 
       response 204, 'Categoria removida' do
-        let!(:user) { create_user }
+        let!(:user) { create_bibliotecario }
         let!(:categoria) { Categoria.create!(nome: 'Remover') }
         let(:Authorization) { auth_headers(user)["Authorization"] }
         let(:id) { categoria.id }
