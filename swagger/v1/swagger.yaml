@@ -900,13 +900,33 @@ paths:
       - name: page
         in: query
         required: false
+        description: Pagina
         schema:
           type: integer
       - name: per_page
         in: query
         required: false
+        description: Itens por pagina
         schema:
           type: integer
+      - name: q
+        in: query
+        required: false
+        description: Busca por titulo ou autor
+        schema:
+          type: string
+      - name: categoria_id
+        in: query
+        required: false
+        description: Filtro por categoria
+        schema:
+          type: integer
+      - name: status
+        in: query
+        required: false
+        description: Filtro por status (disponivel|emprestado)
+        schema:
+          type: string
       responses:
         '200':
           description: Lista de livros

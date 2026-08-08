@@ -24,8 +24,7 @@ class Emprestimo < ApplicationRecord
   end
 
   def dias_atraso
-    return nil if devolvido?
-    return 0 unless atrasado? || Date.current > data_devolucao_prevista
+    return nil unless em_atraso?
 
     referencia = data_devolucao_real || Date.current
     (referencia - data_devolucao_prevista).to_i

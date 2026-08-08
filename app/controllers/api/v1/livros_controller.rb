@@ -4,7 +4,16 @@ module Api
       before_action :set_livro, only: [:show, :update, :destroy]
 
       def index
-        livros = paginar(Livro.includes(:categoria).order(created_at: :desc))
+        livros = Livro.includes(:categoria).order(created_at: :desc)
+
+        if params[:q].present?
+          termo = "%#{params[:q].strip}%"
+          livros = livros.where("titulo ILIKE :termo OR autor ILIKE :termo", termo: termo)
+        end
+        livros = livros.where(categoria_id: params[:categoria_id]) if params[:categoria_id].present?
+        livros = livros.where(status: params[:status]) if params[:status].present?
+
+        livros = paginar(livros)
         render json: livros.map { |l| livro_json(l) }
       end
 

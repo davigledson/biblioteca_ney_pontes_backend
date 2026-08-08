@@ -33,7 +33,7 @@ RSpec.describe Emprestimo, type: :model do
   describe ".atrasados" do
     it "inclui emprestimos devolvidos com atraso" do
       emprestimo = criar_emprestimo(criar_livro)
-      emprestimo.devolver!(5.days.from_now.to_date)
+      emprestimo.devolver!(emprestimo.data_devolucao_prevista + 5)
 
       expect(emprestimo.status).to eq("atrasado")
       expect(Emprestimo.atrasados).to include(emprestimo)

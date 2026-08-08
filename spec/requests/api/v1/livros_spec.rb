@@ -10,8 +10,11 @@ RSpec.describe 'API V1 Livros', type: :request do
       tags 'Livros'
       produces 'application/json'
       security [{ bearerAuth: [] }]
-      parameter name: :page, in: :query, type: :integer, required: false
-      parameter name: :per_page, in: :query, type: :integer, required: false
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagina'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Itens por pagina'
+      parameter name: :q, in: :query, type: :string, required: false, description: 'Busca por titulo ou autor'
+      parameter name: :categoria_id, in: :query, type: :integer, required: false, description: 'Filtro por categoria'
+      parameter name: :status, in: :query, type: :string, required: false, description: 'Filtro por status (disponivel|emprestado)'
 
       response 200, 'Lista de livros' do
         header 'X-Page', type: :integer, description: 'Pagina atual'
@@ -44,6 +47,8 @@ RSpec.describe 'API V1 Livros', type: :request do
         let!(:categoria) { Categoria.create!(nome: 'Ficcao') }
         let!(:livro) { Livro.create!(titulo: 'Teste', autor: 'Autor', categoria: categoria) }
         let(:Authorization) { auth_headers(user)["Authorization"] }
+        let(:q) { 'Teste' }
+        let(:categoria_id) { categoria.id }
 
         run_test!
       end
