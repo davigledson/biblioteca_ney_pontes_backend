@@ -1,7 +1,8 @@
 module Api
   module V1
     class LivrosController < BaseController
-      before_action :set_livro, only: [:show, :update, :destroy, :historico]
+      skip_before_action :authenticate_api_v1_user!, only: :capa
+      before_action :set_livro, only: [:show, :update, :destroy, :historico, :capa]
 
       def index
         livros = Livro.includes(:categoria).order(created_at: :desc)
@@ -23,8 +24,10 @@ module Api
 
       def create
         livro = Livro.new(livro_params)
+        livro.capa.attach(params[:capa]) if params[:capa].present?
 
         if livro.save
+          livro.sincronizar_capa_blob_id!
           render json: livro_json(livro), status: :created
         else
           render json: { errors: livro.errors.full_messages }, status: :unprocessable_entity
@@ -32,7 +35,11 @@ module Api
       end
 
       def update
+        @livro.remover_capa! if params[:remover_capa] == "true"
+        @livro.capa.attach(params[:capa]) if params[:capa].present?
+
         if @livro.update(livro_params)
+          @livro.sincronizar_capa_blob_id!
           render json: livro_json(@livro)
         else
           render json: { errors: @livro.errors.full_messages }, status: :unprocessable_entity
@@ -44,7 +51,26 @@ module Api
         head :no_content
       end
 
-      def historico
+      def capa
+      return head :not_found unless @livro.capa.attached?
+
+      variant = @livro.capa.variant(resize_to_limit: [600, 900], format: :webp, saver: { quality: 80 })
+      variant.processed
+
+      headers["Cache-Control"] = "public, max-age=31536000, immutable"
+      send_data @livro.capa.blob.service.download(variant.key),
+        type: "image/webp",
+        disposition: "inline",
+        filename: "capa-#{@livro.id}.webp"
+    rescue Vips::Error, ActiveStorage::IntegrityError
+      headers["Cache-Control"] = "public, max-age=31536000, immutable"
+      send_data @livro.capa.download,
+        type: @livro.capa.content_type,
+        disposition: "inline",
+        filename: @livro.capa.filename.to_s
+    end
+
+    def historico
         base = Emprestimo.where(livro: @livro)
         emprestimos = paginar(base.includes(:usuario_biblioteca).order(created_at: :desc))
 
@@ -70,7 +96,9 @@ module Api
       end
 
       def livro_params
-        params.permit(:titulo, :autor, :categoria_id, :status, :observacoes)
+        p = params.permit(:titulo, :autor, :categoria_id, :status, :observacoes, :capa)
+        p[:status] = p[:status].to_i if p[:status].present?
+        p
       end
 
       def livro_json(livro)
@@ -80,6 +108,7 @@ module Api
           autor: livro.autor,
           status: livro.status,
           observacoes: livro.observacoes,
+          capa_url: livro.capa.attached? ? "/api/v1/livros/#{livro.id}/capa?v=#{livro.updated_at.to_i}" : nil,
           categoria: {
             id: livro.categoria.id,
             nome: livro.categoria.nome

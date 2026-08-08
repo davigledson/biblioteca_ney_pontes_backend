@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       resources :livros do
         member do
           get :historico
+          get :capa
         end
       end
       resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas" do
