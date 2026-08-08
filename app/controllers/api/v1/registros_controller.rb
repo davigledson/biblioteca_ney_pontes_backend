@@ -6,7 +6,9 @@ module Api
           user = User.new(registro_user_params.merge(role: :cidadao))
           user.save!
 
-          usuario = user.build_usuario_biblioteca(registro_params)
+          usuario = user.build_usuario_biblioteca(registro_params.merge(
+            senha_emprestimo: SecureRandom.hex(3)
+          ))
           usuario.save!
 
           UserMailer.senha_emprestimo(usuario).deliver_later
@@ -42,7 +44,7 @@ module Api
       end
 
       def registro_params
-        params.permit(:nome_completo, :cpf, :telefone, :senha_emprestimo)
+        params.permit(:nome_completo, :cpf, :telefone)
       end
     end
   end

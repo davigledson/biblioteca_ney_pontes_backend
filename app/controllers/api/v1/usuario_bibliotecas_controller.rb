@@ -40,7 +40,9 @@ module Api
           )
           user.save!
 
-          usuario = user.build_usuario_biblioteca(usuario_params)
+          usuario = user.build_usuario_biblioteca(usuario_params.merge(
+            senha_emprestimo: SecureRandom.hex(3)
+          ))
           usuario.save!
 
           UserMailer.senha_emprestimo(usuario).deliver_later
@@ -74,7 +76,7 @@ module Api
       end
 
       def usuario_params
-        params.permit(:nome_completo, :cpf, :telefone, :senha_emprestimo)
+        params.permit(:nome_completo, :cpf, :telefone)
       end
 
       def usuario_json(usuario)
