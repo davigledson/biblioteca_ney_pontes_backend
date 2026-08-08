@@ -11,10 +11,10 @@ Rails.application.routes.draw do
       }
 
       devise_scope :"api_v1_user" do
-        post   "/login",          to: "users/sessions#create"
-        delete "/logout",         to: "users/sessions#destroy"
-        post   "/users/password", to: "users/passwords#create"
-        put    "/users/password", to: "users/passwords#update"
+        post   "/login",          to: "users/sessions#create", defaults: { format: :json }
+        delete "/logout",         to: "users/sessions#destroy", defaults: { format: :json }
+        post   "/users/password", to: "users/passwords#create", defaults: { format: :json }
+        put    "/users/password", to: "users/passwords#update", defaults: { format: :json }
       end
 
       post "/registro", to: "registros#create"
