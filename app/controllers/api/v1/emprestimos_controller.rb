@@ -5,7 +5,7 @@ module Api
 
       def index
         emprestimos = policy_scope(Emprestimo).includes(:livro, :usuario_biblioteca).order(created_at: :desc)
-        emprestimos = filtrar_por_termo(emprestimos) if params[:q].present?
+        emprestimos = filtrar_por_term(emprestimos) if params[:q].present?
         render json: paginar(emprestimos).map { |e| EmprestimoSerializer.call(e) }
       end
 
