@@ -5,8 +5,12 @@ module Api
 
       def index
         authorize User
-        users = paginar(User.bibliotecario.order(created_at: :desc))
-        render json: users.map { |u| u.as_json(only: [:id, :nome, :email, :role, :first_login, :created_at]) }
+        users = User.bibliotecario.order(created_at: :desc)
+        if params[:q].present?
+          termo = "%#{params[:q].strip}%"
+          users = users.where("nome ILIKE :t OR email ILIKE :t", t: termo)
+        end
+        render json: paginar(users).map { |u| u.as_json(only: [:id, :nome, :email, :role, :first_login, :created_at]) }
       end
 
       def show

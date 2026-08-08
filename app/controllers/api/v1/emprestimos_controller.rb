@@ -4,8 +4,9 @@ module Api
       before_action :set_emprestimo, only: [:show, :devolver, :renovar]
 
       def index
-        emprestimos = paginar(policy_scope(Emprestimo).includes(:livro, :usuario_biblioteca).order(created_at: :desc))
-        render json: emprestimos.map { |e| EmprestimoSerializer.call(e) }
+        emprestimos = policy_scope(Emprestimo).includes(:livro, :usuario_biblioteca).order(created_at: :desc)
+        emprestimos = filtrar_por_termo(emprestimos) if params[:q].present?
+        render json: paginar(emprestimos).map { |e| EmprestimoSerializer.call(e) }
       end
 
       def show
@@ -69,8 +70,9 @@ module Api
 
       def atrasados
         authorize Emprestimo, :atrasados?
-        emprestimos = paginar(Emprestimo.atrasados.includes(:livro, :usuario_biblioteca).order(data_devolucao_prevista: :asc))
-        render json: emprestimos.map { |e| EmprestimoSerializer.call(e) }
+        emprestimos = Emprestimo.atrasados.includes(:livro, :usuario_biblioteca).order(data_devolucao_prevista: :asc)
+        emprestimos = filtrar_por_term(emprestimos) if params[:q].present?
+        render json: paginar(emprestimos).map { |e| EmprestimoSerializer.call(e) }
       end
 
       def historico
@@ -99,6 +101,13 @@ module Api
       end
 
       private
+
+      def filtrar_por_term(scope)
+        termo = "%#{params[:q].strip}%"
+        scope
+          .joins(:livro, :usuario_biblioteca)
+          .where("livros.titulo ILIKE :t OR usuario_bibliotecas.nome_completo ILIKE :t", t: termo)
+      end
 
       def set_emprestimo
         @emprestimo = Emprestimo.includes(:livro, :usuario_biblioteca).find_by(id: params[:id])

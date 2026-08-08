@@ -25,8 +25,14 @@ module Api
 
       def index
         authorize UsuarioBiblioteca
-        usuarios = paginar(policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc))
-        render json: usuarios.map { |u| usuario_json(u) }
+        usuarios = policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc)
+        if params[:q].present?
+          termo = "%#{params[:q].strip}%"
+          usuarios = usuarios
+            .joins(:user)
+            .where("usuario_bibliotecas.nome_completo ILIKE :t OR usuario_bibliotecas.cpf ILIKE :t OR users.email ILIKE :t", t: termo)
+        end
+        render json: paginar(usuarios).map { |u| usuario_json(u) }
       end
 
       def show
