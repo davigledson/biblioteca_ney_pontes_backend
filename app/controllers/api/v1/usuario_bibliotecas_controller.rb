@@ -1,7 +1,21 @@
 module Api
   module V1
     class UsuarioBibliotecasController < BaseController
-      before_action :set_usuario, only: [:show, :update, :destroy]
+      before_action :set_usuario, only: [:show, :update, :destroy, :carteirinha]
+
+      def carteirinha
+        authorize @usuario
+        render json: {
+          id: @usuario.id,
+          nome_completo: @usuario.nome_completo,
+          cpf: @usuario.cpf,
+          email: @usuario.user.email,
+          numero_carteirinha: @usuario.numero_carteirinha,
+          status_carteirinha: @usuario.status_carteirinha,
+          telefone: @usuario.telefone,
+          created_at: @usuario.created_at
+        }
+      end
 
       def index
         authorize UsuarioBiblioteca

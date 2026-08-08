@@ -7,6 +7,10 @@ class UsuarioBibliotecaPolicy < ApplicationPolicy
     bibliotecario? || user&.usuario_biblioteca == record
   end
 
+  def carteirinha?
+    show?
+  end
+
   def create?
     bibliotecario?
   end

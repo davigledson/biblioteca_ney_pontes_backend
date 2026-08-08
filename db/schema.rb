@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_07_030056) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_08_132038) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -76,11 +76,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_07_030056) do
     t.string "cpf", null: false
     t.datetime "created_at", null: false
     t.string "nome_completo", null: false
+    t.string "numero_carteirinha", default: "", null: false
     t.string "senha_emprestimo", null: false
+    t.integer "status_carteirinha", default: 0, null: false
     t.string "telefone", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["cpf"], name: "index_usuario_bibliotecas_on_cpf", unique: true
+    t.index ["numero_carteirinha"], name: "index_usuario_bibliotecas_on_numero_carteirinha", unique: true
     t.index ["user_id"], name: "index_usuario_bibliotecas_on_user_id", unique: true
   end
 
