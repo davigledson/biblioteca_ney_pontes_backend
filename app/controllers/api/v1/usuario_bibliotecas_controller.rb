@@ -24,10 +24,10 @@ module Api
       end
 
       def index
-        authorize UsuarioBiblioteca
-        usuarios = policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc)
-        render json: usuarios.map { |u| usuario_json(u) }
-      end
+  authorize UsuarioBiblioteca
+  usuarios = policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc)
+  render json: usuarios.map { |u| usuario_json(u) }
+end
 
       def show
         authorize @usuario
@@ -77,25 +77,35 @@ module Api
       private
 
       def set_usuario
-        @usuario = UsuarioBiblioteca.includes(:user).find_by(id: params[:id])
-        render json: { error: "Cidadao nao encontrado" }, status: :not_found unless @usuario
-      end
+  @usuario = UsuarioBiblioteca.includes(:user, :endereco).find_by(id: params[:id])
+  render json: { error: "Cidadao nao encontrado" }, status: :not_found unless @usuario
+end
 
       def usuario_params
-        params.permit(:nome_completo, :cpf, :telefone)
-      end
+  params.permit(:nome_completo, :cpf, :telefone,
+    endereco_attributes: [:cep, :logradouro, :bairro, :cidade, :uf, :numero, :complemento])
+end
 
       def usuario_json(usuario)
-        {
-          id: usuario.id,
-          nome_completo: usuario.nome_completo,
-          cpf: usuario.cpf,
-          telefone: usuario.telefone,
-          email: usuario.user.email,
-          senha_emprestimo: usuario.senha_emprestimo,
-          created_at: usuario.created_at
-        }
-      end
+  {
+    id: usuario.id,
+    nome_completo: usuario.nome_completo,
+    cpf: usuario.cpf,
+    telefone: usuario.telefone,
+    email: usuario.user.email,
+    senha_emprestimo: usuario.senha_emprestimo,
+    endereco: usuario.endereco && {
+      cep: usuario.endereco.cep,
+      logradouro: usuario.endereco.logradouro,
+      bairro: usuario.endereco.bairro,
+      cidade: usuario.endereco.cidade,
+      uf: usuario.endereco.uf,
+      numero: usuario.endereco.numero,
+      complemento: usuario.endereco.complemento
+    },
+    created_at: usuario.created_at
+  }
+end
     end
   end
 end

@@ -1,6 +1,8 @@
 class UsuarioBiblioteca < ApplicationRecord
   belongs_to :user
   has_many :emprestimos, dependent: :restrict_with_error
+  has_one :endereco, dependent: :destroy
+  accepts_nested_attributes_for :endereco
 
   enum :status_carteirinha, { ativa: 0, inativa: 1 }
 

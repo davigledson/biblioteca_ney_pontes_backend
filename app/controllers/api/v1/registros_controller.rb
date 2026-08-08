@@ -44,7 +44,8 @@ module Api
       end
 
       def registro_params
-        params.permit(:nome_completo, :cpf, :telefone)
+        params.permit(:nome_completo, :cpf, :telefone,
+          endereco_attributes: [:cep, :logradouro, :bairro, :cidade, :uf, :numero, :complemento])
       end
     end
   end
