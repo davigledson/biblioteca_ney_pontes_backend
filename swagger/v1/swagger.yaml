@@ -889,6 +889,15 @@ paths:
             X-Total-Pages:
               type: integer
               description: Total de paginas
+            X-Ativos:
+              type: integer
+              description: Emprestimos ativos do usuario
+            X-Atrasados:
+              type: integer
+              description: Emprestimos em atraso do usuario
+            X-Multas-Pendentes:
+              type: number
+              description: Soma das multas pendentes (R$)
   "/api/v1/livros":
     get:
       summary: Listar livros

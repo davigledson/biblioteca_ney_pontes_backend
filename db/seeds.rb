@@ -153,13 +153,31 @@ cidadaos.each_with_index do |c, i|
   )
 end
 
-# ======= Emprestimos (21, inclui 10 devolucoes com multa) =======
+# ======= Emprestimos (demo variado e reexecutavel: ~29 + multas) =======
 
-if Emprestimo.none?
-  cidadaos_livros = UsuarioBiblioteca.includes(:user).order(:id).to_a
+cidadaos_demo = UsuarioBiblioteca.includes(:user).order(:id).to_a
 
-  def gerar_emprestimo(livro_titulo, usuario, data_emprestimo, prevista, devolvido_em: nil, pago: false, renovacoes: 0)
-    livro = Livro.find_by!(titulo: livro_titulo)
+if cidadaos_demo.empty?
+  puts "  Aviso: nenhum cidadao cadastrado, pulei o seed de emprestimos."
+else
+  demo_antes = Emprestimo.count
+
+  def garantir_livro_demo(titulo, autor = "Autor Demo")
+    Livro.find_or_create_by!(titulo: titulo) do |l|
+      l.autor = autor
+      l.categoria = Categoria.first || Categoria.find_or_create_by!(nome: "Ficcao")
+      l.status = :disponivel
+    end
+  end
+
+  def gerar_emprestimo_demo(titulo, usuario, data_emprestimo, prevista, devolvido_em: nil, pago: false, renovacoes: 0)
+    livro = garantir_livro_demo(titulo)
+    return if Emprestimo
+      .where(livro: livro, usuario_biblioteca: usuario)
+      .where("data_emprestimo::date = ?", data_emprestimo.to_date)
+      .exists?
+    return unless livro.disponivel? # livro ocupado por emprestimo real: nao mexo
+
     emprestimo = Emprestimo.create!(
       livro: livro,
       usuario_biblioteca: usuario,
@@ -188,21 +206,21 @@ if Emprestimo.none?
   end
 
   # Ativos em dia (5)
-  gerar_emprestimo("Dom Casmurro", cidadaos_livros[0], Time.current - 2.days, (Time.current - 2.days).to_date + 12)
-  gerar_emprestimo("Vidas Secas", cidadaos_livros[1], Time.current - 5.days, (Time.current - 5.days).to_date + 15)
-  gerar_emprestimo("1984", cidadaos_livros[2], Time.current - 8.days, (Time.current - 8.days).to_date + 10)
-  gerar_emprestimo("O Alquimista", cidadaos_livros[3], Time.current - 12.days, (Time.current - 12.days).to_date + 15, renovacoes: 1)
-  gerar_emprestimo("Codigo Limpo", cidadaos_livros[4], Time.current - 3.days, (Time.current - 3.days).to_date + 15)
+  gerar_emprestimo_demo("Dom Casmurro", cidadaos_demo[0], Time.current - 2.days, (Time.current - 2.days).to_date + 12)
+  gerar_emprestimo_demo("Vidas Secas", cidadaos_demo[1], Time.current - 5.days, (Time.current - 5.days).to_date + 15)
+  gerar_emprestimo_demo("1984", cidadaos_demo[2], Time.current - 8.days, (Time.current - 8.days).to_date + 10)
+  gerar_emprestimo_demo("O Alquimista", cidadaos_demo[3], Time.current - 12.days, (Time.current - 12.days).to_date + 15, renovacoes: 1)
+  gerar_emprestimo_demo("Codigo Limpo", cidadaos_demo[4], Time.current - 3.days, (Time.current - 3.days).to_date + 15)
 
   # Ativos vencidos (3) - aparecem no relatorio de atrasados
-  gerar_emprestimo("O Cortico", cidadaos_livros[0], Time.current - 40.days, (Time.current - 40.days).to_date + 15)
-  gerar_emprestimo("Uma Breve Historia do Tempo", cidadaos_livros[5], Time.current - 55.days, (Time.current - 55.days).to_date + 15)
-  gerar_emprestimo("O Mundo de Sofia", cidadaos_livros[6], Time.current - 25.days, (Time.current - 25.days).to_date + 15)
+  gerar_emprestimo_demo("O Cortico", cidadaos_demo[0], Time.current - 40.days, (Time.current - 40.days).to_date + 15)
+  gerar_emprestimo_demo("Uma Breve Historia do Tempo", cidadaos_demo[5], Time.current - 55.days, (Time.current - 55.days).to_date + 15)
+  gerar_emprestimo_demo("O Mundo de Sofia", cidadaos_demo[6], Time.current - 25.days, (Time.current - 25.days).to_date + 15)
 
   # Devolvidos no prazo (3)
-  gerar_emprestimo("O Menino Maluquinho", cidadaos_livros[7], Time.current - 60.days, (Time.current - 60.days).to_date + 15, devolvido_em: (Time.current - 45.days).to_date)
-  gerar_emprestimo("Reinacoes de Narizinho", cidadaos_livros[8], Time.current - 30.days, (Time.current - 30.days).to_date + 15, devolvido_em: (Time.current - 22.days).to_date)
-  gerar_emprestimo("Mossoro: Cidade e Regiao", cidadaos_livros[0], Time.current - 75.days, (Time.current - 75.days).to_date + 15, devolvido_em: (Time.current - 65.days).to_date)
+  gerar_emprestimo_demo("O Menino Maluquinho", cidadaos_demo[7], Time.current - 60.days, (Time.current - 60.days).to_date + 15, devolvido_em: (Time.current - 45.days).to_date)
+  gerar_emprestimo_demo("Reinacoes de Narizinho", cidadaos_demo[8], Time.current - 30.days, (Time.current - 30.days).to_date + 15, devolvido_em: (Time.current - 22.days).to_date)
+  gerar_emprestimo_demo("Mossoro: Cidade e Regiao", cidadaos_demo[0], Time.current - 75.days, (Time.current - 75.days).to_date + 15, devolvido_em: (Time.current - 65.days).to_date)
 
   # Devolvidos com atraso e multa (10)
   devolucoes_atrasadas = [
@@ -219,12 +237,27 @@ if Emprestimo.none?
   ]
 
   devolucoes_atrasadas.each do |titulo, idx, dias_emprestimo, dias_ate_devolucao, pago|
-    usuario = cidadaos_livros[idx % cidadaos_livros.size]
+    usuario = cidadaos_demo[idx % cidadaos_demo.size]
     data_emp = Time.current - dias_emprestimo.days
     prevista = data_emp.to_date + 15
     devolvido_em = data_emp.to_date + dias_ate_devolucao
-    gerar_emprestimo(titulo, usuario, data_emp, prevista, devolvido_em: devolvido_em, pago: pago, renovacoes: 1)
+    gerar_emprestimo_demo(titulo, usuario, data_emp, prevista, devolvido_em: devolvido_em, pago: pago, renovacoes: 1)
   end
+
+  # Reforco no historico do primeiro cidadao (mais de 10 registros para testar paginacao)
+  u0 = cidadaos_demo[0]
+
+  gerar_emprestimo_demo("O Vendedor de Sonhos", u0, Time.current - 90.days, (Time.current - 90.days).to_date + 15, devolvido_em: (Time.current - 82.days).to_date)
+  gerar_emprestimo_demo("O Poder do Habito", u0, Time.current - 70.days, (Time.current - 70.days).to_date + 15, devolvido_em: (Time.current - 63.days).to_date)
+  gerar_emprestimo_demo("A Arte da Guerra", u0, Time.current - 52.days, (Time.current - 52.days).to_date + 15, devolvido_em: (Time.current - 44.days).to_date)
+  gerar_emprestimo_demo("Mindset", u0, Time.current - 36.days, (Time.current - 36.days).to_date + 15, devolvido_em: (Time.current - 26.days).to_date)
+  gerar_emprestimo_demo("O Homem Mais Rico da Babilonia", u0, Time.current - 21.days, (Time.current - 21.days).to_date + 15, devolvido_em: (Time.current - 14.days).to_date)
+  gerar_emprestimo_demo("Essencialismo", u0, Time.current - 15.days, (Time.current - 15.days).to_date + 15, devolvido_em: (Time.current - 8.days).to_date, pago: true)
+  gerar_emprestimo_demo("A Sutil Arte de Ligar o Foda-se", u0, Time.current - 9.days, (Time.current - 9.days).to_date + 15, devolvido_em: (Time.current - 4.days).to_date, pago: false)
+  gerar_emprestimo_demo("Comece pelo Porque", u0, Time.current - 7.days, (Time.current - 7.days).to_date + 15, devolvido_em: (Time.current - 1.days).to_date)
+  gerar_emprestimo_demo("O Poder do Agora", u0, Time.current - 4.days, (Time.current - 4.days).to_date + 15, renovacoes: 2)
+
+  puts "  Emprestimos demo criados: #{Emprestimo.count - demo_antes}"
 end
 
 puts "Seeds carregados!"

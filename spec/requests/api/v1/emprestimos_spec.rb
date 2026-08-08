@@ -231,6 +231,9 @@ RSpec.describe 'API V1 Emprestimos', type: :request do
         header 'X-Per-Page', type: :integer, description: 'Itens por pagina'
         header 'X-Total', type: :integer, description: 'Total de registros'
         header 'X-Total-Pages', type: :integer, description: 'Total de paginas'
+        header 'X-Ativos', type: :integer, description: 'Emprestimos ativos do usuario'
+        header 'X-Atrasados', type: :integer, description: 'Emprestimos em atraso do usuario'
+        header 'X-Multas-Pendentes', type: :number, description: 'Soma das multas pendentes (R$)'
 
         let!(:user) { create_bibliotecario }
         let!(:cidadao) { create_cidadao }

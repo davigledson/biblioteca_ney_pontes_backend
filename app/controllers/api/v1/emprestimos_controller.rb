@@ -78,8 +78,24 @@ module Api
         usuario = UsuarioBiblioteca.find_by(id: params[:usuario_biblioteca_id])
         return render json: { error: "Cidadao nao encontrado" }, status: :not_found unless usuario
 
-        emprestimos = paginar(Emprestimo.where(usuario_biblioteca: usuario).includes(:livro).order(created_at: :desc))
-        render json: emprestimos.map { |e| emprestimo_json(e) }
+        base = Emprestimo.where(usuario_biblioteca: usuario)
+        emprestimos = paginar(base.includes(:livro).order(created_at: :desc))
+
+        resumo = {
+          total: base.count,
+          ativos: base.ativos.count,
+          atrasados: Emprestimo.atrasados.where(usuario_biblioteca: usuario).count,
+          multas_pendentes: Multa
+            .joins(:emprestimo)
+            .where(emprestimos: { usuario_biblioteca_id: usuario.id }, pago: false)
+            .sum(:valor)
+            .to_f
+        }
+
+        render json: {
+          emprestimos: emprestimos.map { |e| emprestimo_json(e) },
+          resumo: resumo
+        }
       end
 
       private
@@ -108,7 +124,7 @@ module Api
             nome_completo: emprestimo.usuario_biblioteca.nome_completo,
             cpf: emprestimo.usuario_biblioteca.cpf
           },
-          multa: emprestimo.multa ? { id: emprestimo.multa.id, valor: emprestimo.multa.valor, pago: emprestimo.multa.pago } : nil,
+          multa: emprestimo.multa ? { id: emprestimo.multa.id, valor: emprestimo.multa.valor.to_f, pago: emprestimo.multa.pago } : nil,
           created_at: emprestimo.created_at
         }
       end
