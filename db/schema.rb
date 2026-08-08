@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_08_132038) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_08_182241) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -33,6 +33,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_132038) do
     t.bigint "usuario_biblioteca_id", null: false
     t.index ["livro_id"], name: "index_emprestimos_on_livro_id"
     t.index ["usuario_biblioteca_id"], name: "index_emprestimos_on_usuario_biblioteca_id"
+  end
+
+  create_table "enderecos", force: :cascade do |t|
+    t.string "bairro"
+    t.string "cep"
+    t.string "cidade"
+    t.string "complemento"
+    t.datetime "created_at", null: false
+    t.string "logradouro"
+    t.string "numero"
+    t.string "uf"
+    t.datetime "updated_at", null: false
+    t.bigint "usuario_biblioteca_id", null: false
+    t.index ["usuario_biblioteca_id"], name: "index_enderecos_on_usuario_biblioteca_id"
   end
 
   create_table "livros", force: :cascade do |t|
@@ -89,6 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_132038) do
 
   add_foreign_key "emprestimos", "livros"
   add_foreign_key "emprestimos", "usuario_bibliotecas"
+  add_foreign_key "enderecos", "usuario_bibliotecas"
   add_foreign_key "livros", "categorias"
   add_foreign_key "multas", "emprestimos"
   add_foreign_key "usuario_bibliotecas", "users"

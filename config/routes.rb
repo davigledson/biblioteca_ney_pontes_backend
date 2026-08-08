@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas" do
         member do
           get :carteirinha
+          post :enviar_senha_emprestimo
         end
       end
 

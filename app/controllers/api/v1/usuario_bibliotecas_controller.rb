@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsuarioBibliotecasController < BaseController
-      before_action :set_usuario, only: [:show, :update, :destroy, :carteirinha]
+      before_action :set_usuario, only: [:show, :update, :destroy, :carteirinha, :enviar_senha_emprestimo]
 
       def carteirinha
         authorize @usuario
@@ -17,11 +17,17 @@ module Api
         }
       end
 
-      def index
-        authorize UsuarioBiblioteca
-        usuarios = policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc)
-        render json: usuarios.map { |u| usuario_json(u) }
+      def enviar_senha_emprestimo
+        authorize @usuario, :enviar_senha_emprestimo?
+        UserMailer.senha_emprestimo(@usuario).deliver_later
+        render json: { message: "Senha de emprestimo enviada para #{@usuario.user.email}" }
       end
+
+      def index
+  authorize UsuarioBiblioteca
+  usuarios = policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc)
+  render json: usuarios.map { |u| usuario_json(u) }
+end
 
       def show
         authorize @usuario
@@ -40,8 +46,12 @@ module Api
           )
           user.save!
 
-          usuario = user.build_usuario_biblioteca(usuario_params)
+          usuario = user.build_usuario_biblioteca(usuario_params.merge(
+            senha_emprestimo: SecureRandom.hex(3)
+          ))
           usuario.save!
+
+          UserMailer.senha_emprestimo(usuario).deliver_later
 
           render json: usuario_json(usuario), status: :created
         end
@@ -67,25 +77,35 @@ module Api
       private
 
       def set_usuario
-        @usuario = UsuarioBiblioteca.includes(:user).find_by(id: params[:id])
-        render json: { error: "Cidadao nao encontrado" }, status: :not_found unless @usuario
-      end
+  @usuario = UsuarioBiblioteca.includes(:user, :endereco).find_by(id: params[:id])
+  render json: { error: "Cidadao nao encontrado" }, status: :not_found unless @usuario
+end
 
       def usuario_params
-        params.permit(:nome_completo, :cpf, :telefone, :senha_emprestimo)
-      end
+  params.permit(:nome_completo, :cpf, :telefone,
+    endereco_attributes: [:cep, :logradouro, :bairro, :cidade, :uf, :numero, :complemento])
+end
 
       def usuario_json(usuario)
-        {
-          id: usuario.id,
-          nome_completo: usuario.nome_completo,
-          cpf: usuario.cpf,
-          telefone: usuario.telefone,
-          email: usuario.user.email,
-          senha_emprestimo: usuario.senha_emprestimo,
-          created_at: usuario.created_at
-        }
-      end
+  {
+    id: usuario.id,
+    nome_completo: usuario.nome_completo,
+    cpf: usuario.cpf,
+    telefone: usuario.telefone,
+    email: usuario.user.email,
+    senha_emprestimo: usuario.senha_emprestimo,
+    endereco: usuario.endereco && {
+      cep: usuario.endereco.cep,
+      logradouro: usuario.endereco.logradouro,
+      bairro: usuario.endereco.bairro,
+      cidade: usuario.endereco.cidade,
+      uf: usuario.endereco.uf,
+      numero: usuario.endereco.numero,
+      complemento: usuario.endereco.complemento
+    },
+    created_at: usuario.created_at
+  }
+end
     end
   end
 end
