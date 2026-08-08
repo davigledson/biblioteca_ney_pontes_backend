@@ -24,10 +24,10 @@ module Api
       end
 
       def index
-  authorize UsuarioBiblioteca
-  usuarios = policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc)
-  render json: usuarios.map { |u| usuario_json(u) }
-end
+        authorize UsuarioBiblioteca
+        usuarios = paginar(policy_scope(UsuarioBiblioteca).includes(:user).order(created_at: :desc))
+        render json: usuarios.map { |u| usuario_json(u) }
+      end
 
       def show
         authorize @usuario

@@ -13,8 +13,15 @@ RSpec.describe 'API V1 Emprestimos', type: :request do
       tags 'Emprestimos'
       produces 'application/json'
       security [{ bearerAuth: [] }]
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
 
       response 200, 'Lista de emprestimos (bibliotecario)' do
+        header 'X-Page', type: :integer, description: 'Pagina atual'
+        header 'X-Per-Page', type: :integer, description: 'Itens por pagina'
+        header 'X-Total', type: :integer, description: 'Total de registros'
+        header 'X-Total-Pages', type: :integer, description: 'Total de paginas'
+
         schema type: :array,
           items: {
             type: :object,
@@ -193,8 +200,15 @@ RSpec.describe 'API V1 Emprestimos', type: :request do
       tags 'Emprestimos'
       produces 'application/json'
       security [{ bearerAuth: [] }]
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
 
       response 200, 'Lista de atrasados' do
+        header 'X-Page', type: :integer, description: 'Pagina atual'
+        header 'X-Per-Page', type: :integer, description: 'Itens por pagina'
+        header 'X-Total', type: :integer, description: 'Total de registros'
+        header 'X-Total-Pages', type: :integer, description: 'Total de paginas'
+
         let!(:user) { create_bibliotecario }
         let(:Authorization) { auth_headers(user)["Authorization"] }
 
@@ -209,8 +223,15 @@ RSpec.describe 'API V1 Emprestimos', type: :request do
       produces 'application/json'
       security [{ bearerAuth: [] }]
       parameter name: :usuario_biblioteca_id, in: :query, type: :integer, required: true
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
 
       response 200, 'Historico encontrado' do
+        header 'X-Page', type: :integer, description: 'Pagina atual'
+        header 'X-Per-Page', type: :integer, description: 'Itens por pagina'
+        header 'X-Total', type: :integer, description: 'Total de registros'
+        header 'X-Total-Pages', type: :integer, description: 'Total de paginas'
+
         let!(:user) { create_bibliotecario }
         let!(:cidadao) { create_cidadao }
         let(:Authorization) { auth_headers(user)["Authorization"] }

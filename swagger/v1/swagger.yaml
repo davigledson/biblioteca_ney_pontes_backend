@@ -18,9 +18,33 @@ paths:
       - Categorias
       security:
       - bearerAuth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: Lista de categorias
+          headers:
+            X-Page:
+              type: integer
+              description: Pagina atual
+            X-Per-Page:
+              type: integer
+              description: Itens por pagina
+            X-Total:
+              type: integer
+              description: Total de registros
+            X-Total-Pages:
+              type: integer
+              description: Total de paginas
           content:
             application/json:
               schema:
@@ -174,9 +198,33 @@ paths:
       - Cidadaos
       security:
       - bearerAuth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: Lista de cidadaos
+          headers:
+            X-Page:
+              type: integer
+              description: Pagina atual
+            X-Per-Page:
+              type: integer
+              description: Itens por pagina
+            X-Total:
+              type: integer
+              description: Total de registros
+            X-Total-Pages:
+              type: integer
+              description: Total de paginas
           content:
             application/json:
               schema:
@@ -518,9 +566,33 @@ paths:
       - Emprestimos
       security:
       - bearerAuth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: Lista de emprestimos (bibliotecario)
+          headers:
+            X-Page:
+              type: integer
+              description: Pagina atual
+            X-Per-Page:
+              type: integer
+              description: Itens por pagina
+            X-Total:
+              type: integer
+              description: Total de registros
+            X-Total-Pages:
+              type: integer
+              description: Total de paginas
           content:
             application/json:
               schema:
@@ -751,9 +823,33 @@ paths:
       - Emprestimos
       security:
       - bearerAuth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: Lista de atrasados
+          headers:
+            X-Page:
+              type: integer
+              description: Pagina atual
+            X-Per-Page:
+              type: integer
+              description: Itens por pagina
+            X-Total:
+              type: integer
+              description: Total de registros
+            X-Total-Pages:
+              type: integer
+              description: Total de paginas
   "/api/v1/emprestimos/historico":
     get:
       summary: Historico de emprestimos por usuario
@@ -767,9 +863,32 @@ paths:
         required: true
         schema:
           type: integer
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: Historico encontrado
+          headers:
+            X-Page:
+              type: integer
+              description: Pagina atual
+            X-Per-Page:
+              type: integer
+              description: Itens por pagina
+            X-Total:
+              type: integer
+              description: Total de registros
+            X-Total-Pages:
+              type: integer
+              description: Total de paginas
   "/api/v1/livros":
     get:
       summary: Listar livros
@@ -777,9 +896,33 @@ paths:
       - Livros
       security:
       - bearerAuth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: Lista de livros
+          headers:
+            X-Page:
+              type: integer
+              description: Pagina atual
+            X-Per-Page:
+              type: integer
+              description: Itens por pagina
+            X-Total:
+              type: integer
+              description: Total de registros
+            X-Total-Pages:
+              type: integer
+              description: Total de paginas
           content:
             application/json:
               schema:
@@ -1116,9 +1259,33 @@ paths:
       - Bibliotecários
       security:
       - bearerAuth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
         '200':
           description: Lista de bibliotecários
+          headers:
+            X-Page:
+              type: integer
+              description: Pagina atual
+            X-Per-Page:
+              type: integer
+              description: Itens por pagina
+            X-Total:
+              type: integer
+              description: Total de registros
+            X-Total-Pages:
+              type: integer
+              description: Total de paginas
           content:
             application/json:
               schema:

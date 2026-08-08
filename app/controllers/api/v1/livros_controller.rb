@@ -4,7 +4,7 @@ module Api
       before_action :set_livro, only: [:show, :update, :destroy]
 
       def index
-        livros = Livro.includes(:categoria).all.order(created_at: :desc)
+        livros = paginar(Livro.includes(:categoria).order(created_at: :desc))
         render json: livros.map { |l| livro_json(l) }
       end
 

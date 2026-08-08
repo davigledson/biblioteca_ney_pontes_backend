@@ -5,8 +5,8 @@ module Api
 
       def index
         authorize User
-        users = User.bibliotecario.order(created_at: :desc)
-        render json: users.as_json(only: [:id, :nome, :email, :role, :first_login, :created_at])
+        users = paginar(User.bibliotecario.order(created_at: :desc))
+        render json: users.map { |u| u.as_json(only: [:id, :nome, :email, :role, :first_login, :created_at]) }
       end
 
       def show

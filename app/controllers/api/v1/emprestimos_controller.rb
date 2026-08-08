@@ -4,7 +4,7 @@ module Api
       before_action :set_emprestimo, only: [:show, :devolver, :renovar]
 
       def index
-        emprestimos = policy_scope(Emprestimo).includes(:livro, :usuario_biblioteca).order(created_at: :desc)
+        emprestimos = paginar(policy_scope(Emprestimo).includes(:livro, :usuario_biblioteca).order(created_at: :desc))
         render json: emprestimos.map { |e| emprestimo_json(e) }
       end
 
@@ -69,7 +69,7 @@ module Api
 
       def atrasados
         authorize Emprestimo, :atrasados?
-        emprestimos = Emprestimo.atrasados.includes(:livro, :usuario_biblioteca).order(data_devolucao_prevista: :asc)
+        emprestimos = paginar(Emprestimo.atrasados.includes(:livro, :usuario_biblioteca).order(data_devolucao_prevista: :asc))
         render json: emprestimos.map { |e| emprestimo_json(e) }
       end
 
@@ -78,7 +78,7 @@ module Api
         usuario = UsuarioBiblioteca.find_by(id: params[:usuario_biblioteca_id])
         return render json: { error: "Cidadao nao encontrado" }, status: :not_found unless usuario
 
-        emprestimos = Emprestimo.where(usuario_biblioteca: usuario).includes(:livro).order(created_at: :desc)
+        emprestimos = paginar(Emprestimo.where(usuario_biblioteca: usuario).includes(:livro).order(created_at: :desc))
         render json: emprestimos.map { |e| emprestimo_json(e) }
       end
 

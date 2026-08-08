@@ -4,7 +4,7 @@ module Api
       before_action :set_categoria, only: [:show, :update, :destroy]
 
       def index
-        categorias = Categoria.all.order(created_at: :desc)
+        categorias = paginar(Categoria.order(created_at: :desc))
         render json: categorias.as_json(only: [:id, :nome, :created_at])
       end
 
