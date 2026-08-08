@@ -15,6 +15,6 @@ class UsuarioBiblioteca < ApplicationRecord
   private
 
   def gerar_numero_carteirinha
-    self.numero_carteirinha ||= "BNP-#{Date.current.year}-#{SecureRandom.hex(4).upcase}"
+    self.numero_carteirinha = "BNP-#{Date.current.year}-#{SecureRandom.hex(4).upcase}" if numero_carteirinha.blank?
   end
 end

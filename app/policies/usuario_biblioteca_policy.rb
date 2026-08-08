@@ -11,6 +11,10 @@ class UsuarioBibliotecaPolicy < ApplicationPolicy
     show?
   end
 
+  def enviar_senha_emprestimo?
+    bibliotecario?
+  end
+
   def create?
     bibliotecario?
   end

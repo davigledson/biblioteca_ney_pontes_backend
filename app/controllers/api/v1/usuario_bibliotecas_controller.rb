@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsuarioBibliotecasController < BaseController
-      before_action :set_usuario, only: [:show, :update, :destroy, :carteirinha]
+      before_action :set_usuario, only: [:show, :update, :destroy, :carteirinha, :enviar_senha_emprestimo]
 
       def carteirinha
         authorize @usuario
@@ -15,6 +15,12 @@ module Api
           telefone: @usuario.telefone,
           created_at: @usuario.created_at
         }
+      end
+
+      def enviar_senha_emprestimo
+        authorize @usuario, :enviar_senha_emprestimo?
+        UserMailer.senha_emprestimo(@usuario).deliver_later
+        render json: { message: "Senha de emprestimo enviada para #{@usuario.user.email}" }
       end
 
       def index
