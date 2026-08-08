@@ -9,6 +9,8 @@ module Api
           usuario = user.build_usuario_biblioteca(registro_params)
           usuario.save!
 
+          UserMailer.senha_emprestimo(usuario).deliver_later
+
           token = Warden::JWTAuth::UserEncoder.new.call(user, :api_v1_user, nil).first
 
           render json: {

@@ -43,6 +43,8 @@ module Api
           usuario = user.build_usuario_biblioteca(usuario_params)
           usuario.save!
 
+          UserMailer.senha_emprestimo(usuario).deliver_later
+
           render json: usuario_json(usuario), status: :created
         end
       rescue ActiveRecord::RecordInvalid => e
