@@ -20,7 +20,7 @@ class User < ApplicationRecord
   end
 
   def jwt_payload
-    { "jti" => jti, "nome" => nome, "email" => email, "role" => role }
+    { "jti" => jti, "nome" => nome, "email" => email, "role" => role, "first_login" => first_login }
   end
 
   private

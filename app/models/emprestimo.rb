@@ -12,7 +12,24 @@ class Emprestimo < ApplicationRecord
   before_validation :calcular_devolucao_prevista, on: :create
 
   scope :ativos, -> { where(status: :ativo) }
-  scope :atrasados, -> { where(status: :atrasado) }
+  scope :atrasados, -> do
+    where(status: :atrasado)
+      .or(where(status: :ativo).where("data_devolucao_prevista < ?", Date.current))
+  end
+
+  def em_atraso?
+    return false if devolvido?
+
+    atrasado? || Date.current > data_devolucao_prevista
+  end
+
+  def dias_atraso
+    return nil if devolvido?
+    return 0 unless atrasado? || Date.current > data_devolucao_prevista
+
+    referencia = data_devolucao_real || Date.current
+    (referencia - data_devolucao_prevista).to_i
+  end
 
   def devolver!(data_devolucao = Date.current)
     transaction do

@@ -97,6 +97,7 @@ module Api
           data_devolucao_prevista: emprestimo.data_devolucao_prevista,
           data_devolucao_real: emprestimo.data_devolucao_real,
           renovacoes: emprestimo.renovacoes,
+          dias_atraso: emprestimo.dias_atraso,
           livro: {
             id: emprestimo.livro.id,
             titulo: emprestimo.livro.titulo,
