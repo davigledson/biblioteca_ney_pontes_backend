@@ -25,7 +25,11 @@ Rails.application.routes.draw do
       put "/users/:id/change_password", to: "users#change_password"
 
       resources :categorias
-      resources :livros
+      resources :livros do
+        member do
+          get :historico
+        end
+      end
       resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas" do
         member do
           get :carteirinha

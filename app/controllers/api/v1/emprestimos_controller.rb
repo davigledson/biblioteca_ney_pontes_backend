@@ -5,12 +5,12 @@ module Api
 
       def index
         emprestimos = paginar(policy_scope(Emprestimo).includes(:livro, :usuario_biblioteca).order(created_at: :desc))
-        render json: emprestimos.map { |e| emprestimo_json(e) }
+        render json: emprestimos.map { |e| EmprestimoSerializer.call(e) }
       end
 
       def show
         authorize @emprestimo
-        render json: emprestimo_json(@emprestimo)
+        render json: EmprestimoSerializer.call(@emprestimo)
       end
 
       def create
@@ -34,7 +34,7 @@ module Api
 
         if emprestimo.save
           livro.update!(status: :emprestado)
-          render json: emprestimo_json(emprestimo), status: :created
+          render json: EmprestimoSerializer.call(emprestimo), status: :created
         else
           render json: { errors: emprestimo.errors.full_messages }, status: :unprocessable_entity
         end
@@ -53,7 +53,7 @@ module Api
           @emprestimo.create_multa!(valor: 2.0)
         end
 
-        render json: emprestimo_json(@emprestimo)
+        render json: EmprestimoSerializer.call(@emprestimo)
       end
 
       def renovar
@@ -64,13 +64,13 @@ module Api
         end
 
         @emprestimo.renovar!
-        render json: emprestimo_json(@emprestimo)
+        render json: EmprestimoSerializer.call(@emprestimo)
       end
 
       def atrasados
         authorize Emprestimo, :atrasados?
         emprestimos = paginar(Emprestimo.atrasados.includes(:livro, :usuario_biblioteca).order(data_devolucao_prevista: :asc))
-        render json: emprestimos.map { |e| emprestimo_json(e) }
+        render json: emprestimos.map { |e| EmprestimoSerializer.call(e) }
       end
 
       def historico
@@ -93,7 +93,7 @@ module Api
         }
 
         render json: {
-          emprestimos: emprestimos.map { |e| emprestimo_json(e) },
+          emprestimos: emprestimos.map { |e| EmprestimoSerializer.call(e) },
           resumo: resumo
         }
       end
@@ -103,30 +103,6 @@ module Api
       def set_emprestimo
         @emprestimo = Emprestimo.includes(:livro, :usuario_biblioteca).find_by(id: params[:id])
         render json: { error: "Emprestimo nao encontrado" }, status: :not_found unless @emprestimo
-      end
-
-      def emprestimo_json(emprestimo)
-        {
-          id: emprestimo.id,
-          status: emprestimo.status,
-          data_emprestimo: emprestimo.data_emprestimo,
-          data_devolucao_prevista: emprestimo.data_devolucao_prevista,
-          data_devolucao_real: emprestimo.data_devolucao_real,
-          renovacoes: emprestimo.renovacoes,
-          dias_atraso: emprestimo.dias_atraso,
-          livro: {
-            id: emprestimo.livro.id,
-            titulo: emprestimo.livro.titulo,
-            autor: emprestimo.livro.autor
-          },
-          usuario_biblioteca: {
-            id: emprestimo.usuario_biblioteca.id,
-            nome_completo: emprestimo.usuario_biblioteca.nome_completo,
-            cpf: emprestimo.usuario_biblioteca.cpf
-          },
-          multa: emprestimo.multa ? { id: emprestimo.multa.id, valor: emprestimo.multa.valor.to_f, pago: emprestimo.multa.pago } : nil,
-          created_at: emprestimo.created_at
-        }
       end
     end
   end

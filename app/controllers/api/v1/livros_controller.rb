@@ -1,7 +1,7 @@
 module Api
   module V1
     class LivrosController < BaseController
-      before_action :set_livro, only: [:show, :update, :destroy]
+      before_action :set_livro, only: [:show, :update, :destroy, :historico]
 
       def index
         livros = Livro.includes(:categoria).order(created_at: :desc)
@@ -42,6 +42,24 @@ module Api
       def destroy
         @livro.destroy
         head :no_content
+      end
+
+      def historico
+        base = Emprestimo.where(livro: @livro)
+        emprestimos = paginar(base.includes(:usuario_biblioteca).order(created_at: :desc))
+
+        resumo = {
+          total: base.count,
+          atuais: base.where.not(status: :devolvido).count,
+          devolvidos: base.where(status: :devolvido).count,
+          atrasados: Emprestimo.atrasados.where(livro: @livro).count
+        }
+
+        render json: {
+          livro: livro_json(@livro),
+          emprestimos: emprestimos.map { |e| EmprestimoSerializer.call(e) },
+          resumo: resumo
+        }
       end
 
       private
