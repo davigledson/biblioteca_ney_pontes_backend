@@ -34,6 +34,8 @@ module Api
           telefone: perfil.telefone,
           email: perfil.user.email,
           senha_emprestimo: perfil.senha_emprestimo,
+          numero_carteirinha: perfil.numero_carteirinha,
+          status_carteirinha: perfil.status_carteirinha,
           created_at: perfil.created_at
         }
       end

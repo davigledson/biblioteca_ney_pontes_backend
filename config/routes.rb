@@ -26,7 +26,11 @@ Rails.application.routes.draw do
 
       resources :categorias
       resources :livros
-      resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas"
+      resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas" do
+        member do
+          get :carteirinha
+        end
+      end
 
       resources :emprestimos, only: [:index, :show, :create] do
         member do

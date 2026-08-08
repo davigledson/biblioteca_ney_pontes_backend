@@ -19,6 +19,7 @@ module Api
                 id: user.id,
                 nome: user.nome,
                 email: user.email,
+                role: user.role,
                 first_login: user.first_login
               },
               token: token
