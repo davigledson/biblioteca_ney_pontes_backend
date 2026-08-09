@@ -52,14 +52,15 @@ module Api
           )
           user.save!
 
+          senha = params[:senha_emprestimo].presence || SecureRandom.hex(3)
           usuario = user.build_usuario_biblioteca(usuario_params.merge(
-            senha_emprestimo: SecureRandom.hex(3)
+            senha_emprestimo: senha
           ))
           usuario.save!
 
           UserMailer.senha_emprestimo(usuario).deliver_later
 
-          render json: usuario_json(usuario), status: :created
+          render json: usuario_json(usuario).merge(senha_emprestimo: senha), status: :created
         end
       rescue ActiveRecord::RecordInvalid => e
         render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
