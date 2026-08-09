@@ -3,7 +3,11 @@ class User < ApplicationRecord
          :validatable, :jwt_authenticatable,
          jwt_revocation_strategy: self
 
-  enum :role, { bibliotecario: 0, cidadao: 1 }
+  enum :role, { bibliotecario: 0, cidadao: 1, admin: 2 }
+
+  def funcionario?
+    bibliotecario? || admin?
+  end
 
   validates :nome, presence: true
 

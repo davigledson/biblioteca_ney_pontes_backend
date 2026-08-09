@@ -8,9 +8,11 @@ unless User.exists?(email: "admin@biblioteca.com")
     email: "admin@biblioteca.com",
     password: "admin123",
     password_confirmation: "admin123",
-    role: :bibliotecario,
+    role: :admin,
     first_login: true
   )
+else
+  User.find_by(email: "admin@biblioteca.com").update_column(:role, 2)
 end
 
 unless User.exists?(email: "cidadao@email.com")

@@ -1,10 +1,10 @@
 class UsuarioBibliotecaPolicy < ApplicationPolicy
   def index?
-    bibliotecario?
+    funcionario?
   end
 
   def show?
-    bibliotecario? || user&.usuario_biblioteca == record
+    funcionario? || user&.usuario_biblioteca == record
   end
 
   def carteirinha?
@@ -12,24 +12,24 @@ class UsuarioBibliotecaPolicy < ApplicationPolicy
   end
 
   def enviar_senha_emprestimo?
-    bibliotecario?
+    funcionario?
   end
 
   def create?
-    bibliotecario?
+    funcionario?
   end
 
   def update?
-    bibliotecario? || user&.usuario_biblioteca == record
+    funcionario? || user&.usuario_biblioteca == record
   end
 
   def destroy?
-    bibliotecario?
+    funcionario?
   end
 
   class Scope < Scope
     def resolve
-      if user.bibliotecario?
+      if user.funcionario?
         scope.all
       else
         scope.where(id: user.usuario_biblioteca&.id)

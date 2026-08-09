@@ -1,25 +1,25 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    bibliotecario?
+    admin?
   end
 
   def show?
-    bibliotecario?
+    admin?
   end
 
   def create?
-    bibliotecario?
+    admin?
   end
 
   def update?
-    bibliotecario?
+    admin?
   end
 
   def destroy?
-    bibliotecario?
+    admin?
   end
 
   def change_password?
-    bibliotecario? || user == record
+    admin? || user == record
   end
 end

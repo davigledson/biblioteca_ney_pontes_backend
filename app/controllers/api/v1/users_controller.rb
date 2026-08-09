@@ -24,8 +24,9 @@ module Api
         user = User.new(user_params.merge(password: temp_password, password_confirmation: temp_password, role: :bibliotecario))
 
         if user.save
+          UserMailer.credenciais_acesso(user, temp_password).deliver_later
           render json: {
-            message: "Bibliotecario cadastrado com sucesso",
+            message: "Bibliotecario cadastrado com sucesso. A senha temporaria foi enviada para o email do bibliotecario.",
             user: {
               id: user.id,
               nome: user.nome,
