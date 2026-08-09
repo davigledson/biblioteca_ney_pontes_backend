@@ -2,101 +2,37 @@
 
 API REST em Ruby on Rails para gerenciamento do acervo e emprestimos da biblioteca.
 
-> Visão geral do projeto e como executar todo o sistema: [README do projeto](../README.md)
+## Extras implementados
 
----
+### Sugestões do edital (pontuação extra)
 
-## Requisitos do edital (DESAFIO Nº 0001/2026) — todos cumpridos ✅
+- Relatório de livros em atraso, com busca e exportação CSV
+- Renovação online (pelo bibliotecário e pelo cidadão no portal)
+- Histórico de empréstimos por usuário
+- Multas por atraso (R$ 2,00), aplicadas automaticamente na devolução atrasada, com registro de pagamento
 
-### a) Autenticação ✅
+### Tecnologias opcionais do edital
 
-> O sistema deverá permitir o cadastro de novos bibliotecários (nome, e-mail e senha com criptografia no banco). Página de login com e-mail e senha. Funcionalidade de recuperação de senha. Cada novo bibliotecário terá senha provisória cadastrada pelo admin e, no primeiro acesso, será solicitada uma nova senha.
+- Frontend em React + TypeScript
+- API ViaCep no preenchimento automático de endereços
 
-- [x] **Cadastro de bibliotecários** pelo admin (nome, e-mail e senha provisória).
-- [x] **Criptografia de senha** no banco (bcrypt via Devise).
-- [x] **Página de login** solicitando e-mail e senha.
-- [x] **Recuperação de senha por e-mail** (link de redefinição com expiração).
-- [x] **Senha provisória + troca obrigatória no primeiro acesso** (`first_login`).
+### Outros extras visíveis ao usuário
 
-### b) Categorias de livros ✅
+- Renovação online pelo cidadão, sem precisar ir à biblioteca
+- Upload de capa de livros (JPG/PNG/WebP, até 5 MB), com pré-visualização e remoção
+- Carteirinha digital com número gerado automaticamente
+- Portal do cidadão (dashboard, meus empréstimos, carteirinha, perfil)
+- Cadastro público de cidadão e acervo público com busca por título/autor
+- ViaCep no cadastro: endereço preenchido automaticamente ao informar o CEP
+- Dashboard administrativo com indicadores
+- Relatórios com exportação CSV e filtros por período/status
+- Mensagens de erro amigáveis e sessão estável (erros de negócio não derrubam o login)
 
-> O sistema deverá conter uma página para o cadastro de categorias de livros, considerando apenas o nome da categoria (obrigatório).
+### Extras técnicos
 
-- [x] **CRUD de categorias** com o único atributo obrigatório: nome.
-
-### c) Livros ✅
-
-> O sistema deverá conter uma página para o cadastro de livros considerando: ID (obrigatório, único e incremental); Autor (obrigatório); Título (obrigatório); Categoria (obrigatório); Status (disponível, emprestado); Observações (opcional).
-
-- [x] **CRUD de livros** com todos os campos do edital.
-- [x] **Status automático**: *disponível* / *emprestado*, atualizado pelo sistema ao emprestar/devolver.
-- [x] Página de detalhes do livro com empréstimos ativos.
-
-### d) Usuários da biblioteca ✅
-
-> Cadastro de usuários com Nome completo, CPF (obrigatório e único), Telefone, E-mail e Senha de empréstimo. A senha de empréstimo deverá ser gerada automaticamente (aleatória) e enviada para o e-mail do usuário.
-
-- [x] **Cadastro** com nome completo, CPF (único), telefone e e-mail, todos obrigatórios.
-- [x] **Senha de empréstimo gerada automaticamente** (aleatória) para cada novo usuário.
-- [x] **Envio da senha de empréstimo por e-mail**.
-
-### e) Empréstimos de livros ✅
-
-> O empréstimo realiza o fluxo: bibliotecário pesquisa o livro e verifica o status; se Disponível, realiza o empréstimo para o usuário da biblioteca; no ato do empréstimo, deverá ser solicitada a senha de empréstimo do usuário; caso o usuário não exista, deverá ser realizado o seu cadastro antes do empréstimo; o sistema registrará a data do empréstimo e calculará a devolução para até 15 dias úteis.
-
-- [x] **Pesquisa do livro** e verificação de status (`GET /api/v1/livros?q=`).
-- [x] **Empréstimo apenas para livros disponíveis** (regra `livro_disponivel` no model).
-- [x] **Senha de empréstimo solicitada no ato** e validada pelo backend antes de concluir.
-- [x] **Cadastro do usuário antes do empréstimo** caso não exista (cadastro rápido dentro do próprio fluxo, com senha gerada automaticamente).
-- [x] **Data do empréstimo registrada** e **devolução calculada em até 15 dias úteis** (`15.business_days.from_now`).
-
-### f) Sugestões de funcionalidades (pontuação extra) — todas implementadas ✅
-
-> Relatório de livros em atraso; Renovação online; Histórico de empréstimos por usuário; Cálculo de multas a serem pagas devido a atrasos na devolução de livros.
-
-- [x] **Relatório de livros em atraso** — página dedicada, com busca e exportação CSV.
-- [x] **Renovação online** — pelo bibliotecário e pelo próprio cidadão no portal.
-- [x] **Histórico de empréstimos por usuário** — com resumo de ativos, atrasados e multas pendentes.
-- [x] **Cálculo de multas por atraso** — multa de R$ 2,00 aplicada automaticamente na devolução atrasada e registro de pagamento.
-
----
-
-## Tecnologias recomendadas no edital — utilizadas ✅
-
-> "Se o candidato preferir, poderá utilizar outras tecnologias conforme desejar (React para o front, utilizar a API ViaCep...), o que será recompensado com pontuação extra."
-
-- [x] **React + TypeScript** no frontend (SPA).
-- [x] **API ViaCep** para preenchimento automático de endereços.
-
----
-
-## Outros extras implementados
-
-- [x] **Carteirinha digital** com número gerado automaticamente (`BNP-ANO-hex`) e status.
-- [x] **Portal do cidadão**: dashboard, meus empréstimos, renovação online, carteirinha e edição de perfil.
-- [x] **Cadastro público de cidadão** e **acervo público** com busca por título/autor.
-- [x] **Dashboard administrativo** com indicadores (acervo, empréstimos ativos/atrasados, cidadãos).
-- [x] **Relatórios com exportação CSV** e filtros por período/status.
-- [x] **Multiníveis de acesso** (admin / bibliotecário / cidadão) com Pundit.
-- [x] **Documentação Swagger** da API (`/api-docs`).
-- [x] **Suíte de testes automatizados** (RSpec).
-- [x] **Tratamento de erros amigável** no frontend (mensagens do backend exibidas ao usuário) e **sessão estável** (erros de negócio não derrubam o login).
-
----
-
-## Critérios de avaliação atendidos
-
-| Critério | Situação |
-|----------|----------|
-| Autenticação dos usuários (1 pt) | ✅ Implementado |
-| Recuperação de senha por e-mail (1 pt) | ✅ Implementado |
-| Categorias de livros (0,5 pt) | ✅ Implementado |
-| Livros (1 pt) | ✅ Implementado |
-| Usuários da biblioteca (1,5 pt) | ✅ Implementado |
-| Empréstimo de livros (3 pts) | ✅ Implementado |
-| Funcionalidades extras (até 1 pt) | ✅ Todas as 4 sugestões + extras |
-
----
+- Multiníveis de acesso (admin / bibliotecário / cidadão) com Pundit
+- Documentação Swagger da API (`/api-docs`)
+- Suíte de testes automatizados (RSpec)
 
 ## Requisitos
 
