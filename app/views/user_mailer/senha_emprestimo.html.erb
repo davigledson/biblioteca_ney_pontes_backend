@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background-color: #F5F3EE; font-family: 'Inter', -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #F5F3EE; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 480px; background-color: #FFFFFF; border-radius: 8px; overflow: hidden; border: 1px solid #E3DFD3;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #1B3A4B; padding: 28px 32px;">
+              <p style="margin: 0; color: #F5F3EE; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.75;">
+                Biblioteca Municipal Ney Pontes
+              </p>
+              <h1 style="margin: 6px 0 0; color: #FFFFFF; font-size: 20px; font-weight: 600;">
+                Senha de Empréstimo
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding: 32px;">
+              <p style="margin: 0 0 16px; color: #3D3A34; font-size: 14px; line-height: 1.6;">
+                Olá, <strong><%= @usuario.nome_completo %></strong>!
+              </p>
+
+              <p style="margin: 0 0 24px; color: #3D3A34; font-size: 14px; line-height: 1.6;">
+                Seu cadastro na biblioteca foi realizado com sucesso.
+              </p>
+
+              <!-- Senha destaque -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #F5F3EE; border: 1px solid #E9DCA8; border-radius: 6px; margin-bottom: 24px;">
+                <tr>
+                  <td style="padding: 18px 20px;">
+                    <p style="margin: 0 0 6px; color: #8A8578; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">
+                      Senha de empréstimo
+                    </p>
+                    <p style="margin: 0; color: #6B5410; font-size: 22px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; letter-spacing: 1px;">
+                      <%= @usuario.senha_emprestimo %>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 24px; color: #3D3A34; font-size: 14px; line-height: 1.6;">
+                Guarde esta senha. Ela será solicitada pelo bibliotecário no momento do empréstimo de livros.
+              </p>
+
+              <!-- Dados do cadastro -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top: 1px solid #E3DFD3; padding-top: 20px;">
+                <tr>
+                  <td style="padding-top: 20px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding: 4px 0; color: #8A8578; font-size: 12px; width: 140px;">Número da carteirinha</td>
+                        <td style="padding: 4px 0; color: #3D3A34; font-size: 13px; font-family: 'IBM Plex Mono', monospace;"><%= @usuario.numero_carteirinha %></td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 4px 0; color: #8A8578; font-size: 12px;">CPF</td>
+                        <td style="padding: 4px 0; color: #3D3A34; font-size: 13px; font-family: 'IBM Plex Mono', monospace;"><%= @usuario.cpf %></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #F5F3EE; padding: 20px 32px; border-top: 1px solid #E3DFD3;">
+              <p style="margin: 0; color: #8A8578; font-size: 12px; line-height: 1.5;">
+                Biblioteca Municipal Ney Pontes — Mossoró/RN<br>
+                Este é um email automático, não responda.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
