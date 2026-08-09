@@ -48,6 +48,9 @@ Rails.application.routes.draw do
           get :historico
         end
       end
+
+      get "relatorios/emprestimos", to: "relatorios#emprestimos"
+      get "relatorios/multas", to: "relatorios#multas"
     end
   end
 

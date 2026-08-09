@@ -43,7 +43,7 @@ gem "rack-cors"
 
 # Pagination
 gem "pagy"
-
+gem "caxlsx"
 # Swagger / OpenAPI documentation
 
 group :development, :test do
