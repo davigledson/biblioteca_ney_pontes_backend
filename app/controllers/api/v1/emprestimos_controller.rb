@@ -1,7 +1,7 @@
 module Api
   module V1
     class EmprestimosController < BaseController
-      before_action :set_emprestimo, only: [:show, :devolver, :renovar]
+      before_action :set_emprestimo, only: [:show, :devolver, :renovar, :pagar_multa]
 
       def index
         emprestimos = policy_scope(Emprestimo).includes(:livro, :usuario_biblioteca).order(created_at: :desc)
@@ -24,7 +24,7 @@ module Api
         return render json: { error: "Cidadao nao encontrado" }, status: :not_found unless usuario
 
         unless usuario.senha_emprestimo == params[:senha_emprestimo]
-          return render json: { error: "Senha de emprestimo invalida" }, status: :unauthorized
+          return render json: { error: "Senha de emprestimo invalida" }, status: :unprocessable_entity
         end
 
         livro = Livro.find_by(id: params[:livro_id])
