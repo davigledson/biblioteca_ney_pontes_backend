@@ -6,7 +6,11 @@ module Api
       def index
         authorize User
         users = User.bibliotecario.order(created_at: :desc)
-        render json: users.as_json(only: [:id, :nome, :email, :role, :first_login, :created_at])
+        if params[:q].present?
+          termo = "%#{params[:q].strip}%"
+          users = users.where("nome ILIKE :t OR email ILIKE :t", t: termo)
+        end
+        render json: paginar(users).map { |u| u.as_json(only: [:id, :nome, :email, :role, :first_login, :created_at]) }
       end
 
       def show
@@ -20,16 +24,16 @@ module Api
         user = User.new(user_params.merge(password: temp_password, password_confirmation: temp_password, role: :bibliotecario))
 
         if user.save
+          UserMailer.credenciais_acesso(user, temp_password).deliver_later
           render json: {
-            message: "Bibliotecario cadastrado com sucesso",
+            message: "Bibliotecario cadastrado com sucesso. A senha temporaria foi enviada para o email do bibliotecario.",
             user: {
               id: user.id,
               nome: user.nome,
               email: user.email,
               role: user.role,
               first_login: user.first_login
-            },
-            temporary_password: temp_password
+            }
           }, status: :created
         else
           render json: { errors: user.errors.full_messages }, status: :unprocessable_entity

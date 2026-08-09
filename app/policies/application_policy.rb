@@ -38,6 +38,14 @@ class ApplicationPolicy
     user&.bibliotecario?
   end
 
+  def funcionario?
+    user&.bibliotecario? || user&.admin?
+  end
+
+  def admin?
+    user&.admin?
+  end
+
   def cidadao?
     user&.cidadao?
   end

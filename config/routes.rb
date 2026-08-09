@@ -11,10 +11,10 @@ Rails.application.routes.draw do
       }
 
       devise_scope :"api_v1_user" do
-        post   "/login",          to: "users/sessions#create"
-        delete "/logout",         to: "users/sessions#destroy"
-        post   "/users/password", to: "users/passwords#create"
-        put    "/users/password", to: "users/passwords#update"
+        post   "/login",          to: "users/sessions#create", defaults: { format: :json }
+        delete "/logout",         to: "users/sessions#destroy", defaults: { format: :json }
+        post   "/users/password", to: "users/passwords#create", defaults: { format: :json }
+        put    "/users/password", to: "users/passwords#update", defaults: { format: :json }
       end
 
       post "/registro", to: "registros#create"
@@ -25,7 +25,12 @@ Rails.application.routes.draw do
       put "/users/:id/change_password", to: "users#change_password"
 
       resources :categorias
-      resources :livros
+      resources :livros do
+        member do
+          get :historico
+          get :capa
+        end
+      end
       resources :cidadaos, controller: "usuario_bibliotecas", as: "usuario_bibliotecas" do
         member do
           get :carteirinha
@@ -37,12 +42,16 @@ Rails.application.routes.draw do
         member do
           put :devolver
           put :renovar
+          put "multa/pagar", to: "emprestimos#pagar_multa", as: :pagar_multa
         end
         collection do
           get :atrasados
           get :historico
         end
       end
+
+      get "relatorios/emprestimos", to: "relatorios#emprestimos"
+      get "relatorios/multas", to: "relatorios#multas"
     end
   end
 

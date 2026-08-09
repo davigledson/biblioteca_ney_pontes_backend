@@ -36,14 +36,24 @@ Servidor em `http://localhost:3000`.
 
 ## Credenciais
 
-### Admin (bibliotecario)
+### Admin do sistema
 
 | Campo | Valor |
 |-------|-------|
 | E-mail | `admin@biblioteca.com` |
 | Senha | `admin123` |
+| Papel | `admin` |
 
-No primeiro login, sera solicitada a troca da senha.
+No primeiro login, sera solicitada a troca da senha. O admin tem acesso total,
+inclusive ao cadastro de bibliotecarios (que recebem a senha temporaria por email).
+
+### Bibliotecarios (demo)
+
+| E-mail | Senha |
+|--------|-------|
+| `maria.bibliotecaria@biblioteca.com` | `senha123` (trocar no 1º acesso) |
+| `joaopedro.bibliotecario@biblioteca.com` | `senha123` |
+| `fernanda.bibliotecaria@biblioteca.com` | `senha123` |
 
 ### Cidadao
 
@@ -64,6 +74,7 @@ http://localhost:8025
 Emails disparados:
 
 - **Cadastro de cidadao** (publico ou admin) → senha de emprestimo + carteirinha
+- **Cadastro de bibliotecario** (pelo admin) → senha temporaria de acesso
 - **Recuperacao de senha** → link de reset
 
 ## Swagger
@@ -84,13 +95,18 @@ http://localhost:3000/api-docs
 | POST | `/api/v1/users/password` | Recuperar senha |
 | PUT | `/api/v1/users/password` | Redefinir senha |
 
-### Admin (autenticado como bibliotecario)
+### Admin (somente admin do sistema)
 
 | Metodo | Rota | Descricao |
 |--------|------|-----------|
 | GET | `/api/v1/users` | Listar bibliotecarios |
-| POST | `/api/v1/users` | Cadastrar bibliotecario |
+| POST | `/api/v1/users` | Cadastrar bibliotecario (envia senha temporaria por email) |
 | GET/PUT/DELETE | `/api/v1/users/:id` | CRUD bibliotecario |
+
+### Bibliotecario / Admin (autenticados)
+
+| Metodo | Rota | Descricao |
+|--------|------|-----------|
 | GET/POST/PUT/DELETE | `/api/v1/categorias` | CRUD categorias |
 | GET/POST/PUT/DELETE | `/api/v1/livros` | CRUD livros |
 | GET/POST/PUT/DELETE | `/api/v1/cidadaos` | CRUD cidadaos |

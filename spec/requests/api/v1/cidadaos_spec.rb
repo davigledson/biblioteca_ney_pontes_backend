@@ -10,8 +10,15 @@ RSpec.describe 'API V1 Cidadaos', type: :request do
       tags 'Cidadaos'
       produces 'application/json'
       security [{ bearerAuth: [] }]
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
 
       response 200, 'Lista de cidadaos' do
+        header 'X-Page', type: :integer, description: 'Pagina atual'
+        header 'X-Per-Page', type: :integer, description: 'Itens por pagina'
+        header 'X-Total', type: :integer, description: 'Total de registros'
+        header 'X-Total-Pages', type: :integer, description: 'Total de paginas'
+
         schema type: :array,
           items: {
             type: :object,

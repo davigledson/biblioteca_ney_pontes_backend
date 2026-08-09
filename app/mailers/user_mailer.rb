@@ -9,4 +9,13 @@ class UserMailer < ApplicationMailer
       subject: "Biblioteca Ney Pontes - Sua senha de emprestimo"
     )
   end
+
+  def credenciais_acesso(user, senha_temporaria)
+    @user = user
+    @senha = senha_temporaria
+    mail(
+      to: user.email,
+      subject: "Biblioteca Ney Pontes - Suas credenciais de acesso"
+    )
+  end
 end

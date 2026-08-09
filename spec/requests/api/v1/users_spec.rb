@@ -119,8 +119,15 @@ RSpec.describe 'API V1 Users', type: :request do
       tags 'Bibliotecários'
       produces 'application/json'
       security [{ bearerAuth: [] }]
+      parameter name: :page, in: :query, type: :integer, required: false
+      parameter name: :per_page, in: :query, type: :integer, required: false
 
       response 200, 'Lista de bibliotecários' do
+        header 'X-Page', type: :integer, description: 'Pagina atual'
+        header 'X-Per-Page', type: :integer, description: 'Itens por pagina'
+        header 'X-Total', type: :integer, description: 'Total de registros'
+        header 'X-Total-Pages', type: :integer, description: 'Total de paginas'
+
         schema type: :array,
           items: {
             type: :object,

@@ -4,8 +4,11 @@ module Api
       before_action :set_categoria, only: [:show, :update, :destroy]
 
       def index
-        categorias = Categoria.all.order(created_at: :desc)
-        render json: categorias.as_json(only: [:id, :nome, :created_at])
+        categorias = Categoria.order(created_at: :desc)
+        if params[:q].present?
+          categorias = categorias.where("nome ILIKE :termo", termo: "%#{params[:q].strip}%")
+        end
+        render json: paginar(categorias).as_json(only: [:id, :nome, :created_at])
       end
 
       def show

@@ -1,35 +1,39 @@
 class EmprestimoPolicy < ApplicationPolicy
   def index?
-    bibliotecario?
+    funcionario?
   end
 
   def show?
-    bibliotecario? || user&.usuario_biblioteca == record.usuario_biblioteca
+    funcionario? || user&.usuario_biblioteca == record.usuario_biblioteca
   end
 
   def create?
-    bibliotecario?
+    funcionario?
   end
 
   def devolver?
-    bibliotecario?
+    funcionario?
+  end
+
+  def pagar_multa?
+    funcionario?
   end
 
   def renovar?
-    user&.usuario_biblioteca == record.usuario_biblioteca
+    funcionario? || user&.usuario_biblioteca == record.usuario_biblioteca
   end
 
   def atrasados?
-    bibliotecario?
+    funcionario?
   end
 
   def historico?
-    bibliotecario?
+    funcionario?
   end
 
   class Scope < Scope
     def resolve
-      if user.bibliotecario?
+      if user.funcionario?
         scope.all
       else
         scope.where(usuario_biblioteca_id: user.usuario_biblioteca&.id)
