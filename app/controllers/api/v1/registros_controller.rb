@@ -27,8 +27,7 @@ module Api
               id: usuario.id,
               nome_completo: usuario.nome_completo,
               cpf: usuario.cpf,
-              telefone: usuario.telefone,
-              senha_emprestimo: usuario.senha_emprestimo
+              telefone: usuario.telefone
             },
             token: token
           }, status: :created

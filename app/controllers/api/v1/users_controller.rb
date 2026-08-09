@@ -33,8 +33,7 @@ module Api
               email: user.email,
               role: user.role,
               first_login: user.first_login
-            },
-            temporary_password: temp_password
+            }
           }, status: :created
         else
           render json: { errors: user.errors.full_messages }, status: :unprocessable_entity

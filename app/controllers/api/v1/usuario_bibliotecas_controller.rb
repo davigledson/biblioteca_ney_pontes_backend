@@ -99,7 +99,6 @@ end
     cpf: usuario.cpf,
     telefone: usuario.telefone,
     email: usuario.user.email,
-    senha_emprestimo: usuario.senha_emprestimo,
     endereco: usuario.endereco && {
       cep: usuario.endereco.cep,
       logradouro: usuario.endereco.logradouro,
