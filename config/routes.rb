@@ -42,6 +42,7 @@ Rails.application.routes.draw do
         member do
           put :devolver
           put :renovar
+          put "multa/pagar", to: "emprestimos#pagar_multa", as: :pagar_multa
         end
         collection do
           get :atrasados

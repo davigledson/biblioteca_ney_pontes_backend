@@ -100,6 +100,17 @@ module Api
         }
       end
 
+      def pagar_multa
+        authorize @emprestimo, :pagar_multa?
+
+        multa = @emprestimo.multa
+        return render json: { error: "Nao ha multa para este emprestimo" }, status: :not_found unless multa
+        return render json: { error: "Multa ja foi paga" }, status: :unprocessable_entity if multa.pago?
+
+        multa.update!(pago: true)
+        render json: { message: "Multa registrada como paga" }
+      end
+
       private
 
       def filtrar_por_term(scope)

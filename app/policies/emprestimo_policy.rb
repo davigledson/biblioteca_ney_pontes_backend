@@ -15,6 +15,10 @@ class EmprestimoPolicy < ApplicationPolicy
     funcionario?
   end
 
+  def pagar_multa?
+    funcionario?
+  end
+
   def renovar?
     funcionario? || user&.usuario_biblioteca == record.usuario_biblioteca
   end
